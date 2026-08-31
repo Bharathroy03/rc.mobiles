@@ -842,29 +842,41 @@ window.autoFillFullCash = function() {
     updateInvoicePreview();
 };
 
+// ---------------- SAFE DOM TEXT HELPER ----------------
+function safeSetText(idOrEl, text) {
+    if (!idOrEl) return;
+    const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
+    if (el) {
+        el.innerText = text;
+    }
+}
+
 // ---------------- LIVE PREVIEW & REAL-TIME BALANCE CALCULATIONS ----------------
 function updateInvoicePreview() {
-    const custName = document.getElementById("input-customer-name").value.trim() || "[Customer Name]";
-    const custMobile = document.getElementById("input-customer-mobile").value.trim() || "[Mobile Number]";
-    const custAddress = document.getElementById("input-customer-address").value.trim() || "[Address]";
-    const invNo = document.getElementById("input-invoice-no").value.trim() || currentInvoiceNo || "[Auto-generated]";
+    const custName = (document.getElementById("input-customer-name")?.value || "").trim() || "[Customer Name]";
+    const custMobile = (document.getElementById("input-customer-mobile")?.value || "").trim() || "[Mobile Number]";
+    const custAddress = (document.getElementById("input-customer-address")?.value || "").trim() || "[Address]";
+    const invNo = (document.getElementById("input-invoice-no")?.value || "").trim() || currentInvoiceNo || "[Auto-generated]";
     const invDate = getFormatted12HourDateTime();
-    const discount = parseFloat(document.getElementById("input-discount").value) || 0.0;
+    const discount = parseFloat(document.getElementById("input-discount")?.value) || 0.0;
 
-    // Customer & Billed To Details
-    document.getElementById("preview-customer-name").innerText = custName;
-    document.getElementById("preview-customer-mobile").innerText = custMobile;
-    document.getElementById("preview-customer-address").innerText = custAddress;
-    document.getElementById("preview-customer-gstin").innerText = "N/A";
+    // Customer & Billed To Details (Supports both naming conventions)
+    safeSetText("preview-customer-name", custName);
+    safeSetText("preview-cust-name", custName);
+    safeSetText("preview-customer-mobile", custMobile);
+    safeSetText("preview-cust-phone", `+91 ${custMobile.replace(/^(\+91|0)/, '')}`);
+    safeSetText("preview-customer-address", custAddress);
+    safeSetText("preview-cust-address", custAddress);
+    safeSetText("preview-customer-gstin", "N/A");
 
-    const billedNameEl = document.getElementById("preview-billed-name");
-    if (billedNameEl) billedNameEl.innerText = custName;
-    const billedAddressEl = document.getElementById("preview-billed-address");
-    if (billedAddressEl) billedAddressEl.innerText = custAddress;
+    safeSetText("preview-billed-name", custName);
+    safeSetText("preview-billed-address", custAddress);
 
-    document.getElementById("preview-invoice-no").innerText = invNo;
-    document.getElementById("preview-invoice-date").innerText = invDate;
-    document.getElementById("preview-state-supply").innerText = "Andhra Pradesh (37)";
+    safeSetText("preview-invoice-no", invNo);
+    safeSetText("preview-inv-no", invNo);
+    safeSetText("preview-invoice-date", invDate);
+    safeSetText("preview-inv-date", invDate);
+    safeSetText("preview-state-supply", "Andhra Pradesh (37)");
 
     // Items Subtotal Calculation
     let subtotal = 0;
@@ -874,43 +886,44 @@ function updateInvoicePreview() {
     });
 
     // Render A4 Table (Clean Borders & Rounded Corners)
-    const tbody = document.getElementById("previewItemsTbody");
+    const tbody = document.getElementById("previewItemsBody") || document.getElementById("previewItemsTbody");
     const hasAnyItemContent = itemsList.some(it => (it.desc && it.desc.trim().length > 0) || (it.price > 0) || (it.imei && it.imei.trim().length > 0));
 
-    if (!hasAnyItemContent) {
-        tbody.innerHTML = `
-            <tr class="border-b border-slate-200 hover:bg-slate-50/50">
-                <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-slate-200">1</td>
-                <td class="py-2.5 px-2.5 text-left border-r border-slate-200">
-                    <div class="font-bold text-gray-900">[Item / Model Name]</div>
-                    <div class="text-[10px] text-[#0284c7] font-semibold">IMEI/SN: [IMEI/S.NO]</div>
-                </td>
-                <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-slate-200">1</td>
-                <td class="py-2.5 px-2.5 text-right text-gray-500 border-r border-slate-200">₹ 0.00</td>
-                <td class="py-2.5 px-2.5 text-right text-gray-500 border-r border-slate-200">₹ 0.00</td>
-                <td class="py-2.5 px-2.5 text-right font-bold text-gray-900">₹ 0.00</td>
-            </tr>
-        `;
-    } else {
-        tbody.innerHTML = itemsList.map((item, index) => {
-            const itemPrice = item.price || 0.0;
-            const q = item.qty || 1;
-            const lineTotal = q * itemPrice;
-            const lineTaxable = Math.round((lineTotal / 1.18) * 100) / 100;
-            return `
-                <tr class="border-b border-slate-200 hover:bg-slate-50/50">
-                    <td class="py-2.5 px-2.5 text-center text-gray-700 border-r border-slate-200">${index + 1}</td>
-                    <td class="py-2.5 px-2.5 text-left border-r border-slate-200">
-                        <div class="font-bold text-gray-900 break-words">${escapeHtml(item.desc || "[Item / Model Name]")}</div>
-                        <div class="text-[10px] text-[#0284c7] font-semibold break-words">IMEI/SN: ${escapeHtml(item.imei || "[IMEI/S.NO]")}</div>
+    if (tbody) {
+        if (!hasAnyItemContent) {
+            tbody.innerHTML = `
+                <tr class="border-b border-gray-200 hover:bg-slate-50/50">
+                    <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-gray-200">1</td>
+                    <td class="py-2.5 px-2.5 text-left border-r border-gray-200">
+                        <div class="font-bold text-gray-900">[Item / Model Name]</div>
+                        <div class="text-[10px] text-blue-600 font-semibold">IMEI/SN: [IMEI/S.NO]</div>
                     </td>
-                    <td class="py-2.5 px-2.5 text-center font-bold text-gray-900 border-r border-slate-200">${q}</td>
-                    <td class="py-2.5 px-2.5 text-right text-gray-800 border-r border-slate-200">₹${itemPrice.toFixed(2)}</td>
-                    <td class="py-2.5 px-2.5 text-right text-gray-800 border-r border-slate-200">₹${lineTaxable.toFixed(2)}</td>
-                    <td class="py-2.5 px-2.5 text-right font-bold text-gray-900">₹${lineTotal.toFixed(2)}</td>
+                    <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-gray-200">8517</td>
+                    <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-gray-200">1</td>
+                    <td class="py-2.5 px-2.5 text-right text-gray-500 border-r border-gray-200">₹0.00</td>
+                    <td class="py-2.5 px-2.5 text-right font-bold text-gray-900">₹0.00</td>
                 </tr>
             `;
-        }).join("");
+        } else {
+            tbody.innerHTML = itemsList.map((item, index) => {
+                const itemPrice = item.price || 0.0;
+                const q = item.qty || 1;
+                const lineTotal = q * itemPrice;
+                return `
+                    <tr class="border-b border-gray-200 hover:bg-slate-50/50">
+                        <td class="py-2.5 px-2.5 text-center text-gray-700 border-r border-gray-200">${index + 1}</td>
+                        <td class="py-2.5 px-2.5 text-left border-r border-gray-200">
+                            <div class="font-bold text-gray-900 break-words">${escapeHtml(item.desc || "[Item / Model Name]")}</div>
+                            ${item.imei ? `<div class="text-[10px] text-blue-600 font-semibold break-words">IMEI/SN: ${escapeHtml(item.imei)}</div>` : ''}
+                        </td>
+                        <td class="py-2.5 px-2.5 text-center text-gray-700 border-r border-gray-200">${escapeHtml(item.hsn || '8517')}</td>
+                        <td class="py-2.5 px-2.5 text-center font-bold text-gray-900 border-r border-gray-200">${q}</td>
+                        <td class="py-2.5 px-2.5 text-right text-gray-800 border-r border-gray-200">₹${itemPrice.toFixed(2)}</td>
+                        <td class="py-2.5 px-2.5 text-right font-bold text-gray-900">₹${lineTotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            }).join("");
+        }
     }
 
     // Financial Totals
@@ -921,99 +934,107 @@ function updateInvoicePreview() {
     const sgst = Math.round((gstTotal - cgst) * 100) / 100;
 
     // Update Financial Summary in Left Panel
-    document.getElementById("summary-subtotal").innerText = `₹${subtotal.toFixed(2)}`;
-    document.getElementById("summary-taxable").innerText = `₹${taxableTotal.toFixed(2)}`;
-    document.getElementById("summary-gst").innerText = `₹${cgst.toFixed(2)} + ₹${sgst.toFixed(2)}`;
-    document.getElementById("summary-total").innerText = `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    safeSetText("summary-subtotal", `₹${subtotal.toFixed(2)}`);
+    safeSetText("summary-taxable", `₹${taxableTotal.toFixed(2)}`);
+    safeSetText("summary-gst", `₹${cgst.toFixed(2)} + ₹${sgst.toFixed(2)}`);
+    safeSetText("summary-total", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
 
-    // Update Right A4 Summary Sheet
-    document.getElementById("preview-subtotal-val").innerText = `₹${subtotal.toFixed(2)}`;
-    document.getElementById("preview-taxable-val").innerText = `₹${taxableTotal.toFixed(2)}`;
-    document.getElementById("preview-cgst-val").innerText = `₹${cgst.toFixed(2)}`;
-    document.getElementById("preview-sgst-val").innerText = `₹${sgst.toFixed(2)}`;
-    document.getElementById("preview-discount-val").innerText = `₹${discount.toFixed(2)}`;
-    document.getElementById("preview-grandtotal-val").innerText = `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-    document.getElementById("preview-amount-words").innerText = numberToWordsIndian(netTotal) + " Only";
+    // Update Right A4 Summary Sheet (Supports both ID variations)
+    safeSetText("preview-subtotal-val", `₹${subtotal.toFixed(2)}`);
+    safeSetText("preview-subtotal", `₹${subtotal.toFixed(2)}`);
+    safeSetText("preview-taxable-val", `₹${taxableTotal.toFixed(2)}`);
+    safeSetText("preview-taxable", `₹${taxableTotal.toFixed(2)}`);
+    safeSetText("preview-cgst-val", `₹${cgst.toFixed(2)}`);
+    safeSetText("preview-cgst", `₹${cgst.toFixed(2)}`);
+    safeSetText("preview-sgst-val", `₹${sgst.toFixed(2)}`);
+    safeSetText("preview-sgst", `₹${sgst.toFixed(2)}`);
+    safeSetText("preview-discount-val", `₹${discount.toFixed(2)}`);
+    safeSetText("preview-discount", `-₹${discount.toFixed(2)}`);
+    safeSetText("preview-grandtotal-val", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
+    safeSetText("preview-grand-total", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
+    safeSetText("preview-amount-words", numberToWordsIndian(netTotal) + " Only");
+    safeSetText("preview-words", numberToWordsIndian(netTotal) + " Only");
 
     // REAL-TIME SETTLEMENT & DYNAMIC A4 VERTICAL FINANCE BLOCK
     const previewPm = document.getElementById("preview-payment-mode");
-    const financeBox = document.getElementById("preview-finance-details");
+    const financeBox = document.getElementById("previewFinanceBox") || document.getElementById("preview-finance-details");
     const a4FinBlock = document.getElementById("previewA4VerticalFinance");
 
     if (currentPaymentCategory === "finance") {
-        const financer = document.getElementById("pay-financer-name").value || "Finance";
-        const appNo = document.getElementById("pay-finance-approval").value.trim() || "N/A";
-        const dpVal = parseFloat(document.getElementById("pay-finance-dp").value) || 0.0;
-        const dpMode = document.getElementById("pay-finance-dp-mode").value || "Cash";
-        const scheme = document.getElementById("pay-finance-scheme").value.trim() || "N/A";
+        const financer = document.getElementById("pay-financer-name")?.value || "Finance";
+        const appNo = (document.getElementById("pay-finance-approval")?.value || "").trim() || "N/A";
+        const dpVal = parseFloat(document.getElementById("pay-finance-dp")?.value) || 0.0;
+        const dpMode = document.getElementById("pay-finance-dp-mode")?.value || "Cash";
+        const scheme = (document.getElementById("pay-finance-scheme")?.value || "").trim() || "N/A";
         const loanVal = Math.max(0, netTotal - dpVal);
 
-        document.getElementById("pay-fin-grand-total").innerText = `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-        document.getElementById("pay-fin-dp-val").innerText = `₹${dpVal.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-        document.getElementById("pay-fin-loan-val").innerText = `₹${loanVal.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+        safeSetText("pay-fin-grand-total", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2})}`);
+        safeSetText("pay-fin-dp-val", `₹${dpVal.toLocaleString('en-IN', {minimumFractionDigits: 2})}`);
+        safeSetText("pay-fin-loan-val", `₹${loanVal.toLocaleString('en-IN', {minimumFractionDigits: 2})}`);
 
-        previewPm.innerText = `Finance (${financer})`;
+        safeSetText(previewPm, `Finance (${financer})`);
         if (financeBox) financeBox.classList.remove("hidden");
         if (a4FinBlock) a4FinBlock.classList.remove("hidden");
 
         // Set A4 Meta & Vertical Finance Details
-        const appNoEl = document.getElementById("preview-finance-app-no");
-        if (appNoEl) appNoEl.innerText = appNo;
-        const dpValEl = document.getElementById("preview-finance-dp-val");
-        if (dpValEl) dpValEl.innerText = `₹${dpVal.toFixed(2)} (${dpMode})`;
-        const schemeEl = document.getElementById("preview-finance-scheme-val");
-        if (schemeEl) schemeEl.innerText = scheme;
+        safeSetText("preview-finance-app-no", appNo);
+        safeSetText("prevFinApp", appNo);
+        safeSetText("preview-finance-dp-val", `₹${dpVal.toFixed(2)} (${dpMode})`);
+        safeSetText("prevFinDp", `₹${dpVal.toFixed(2)} (${dpMode})`);
+        safeSetText("preview-finance-scheme-val", scheme);
+        safeSetText("prevFinName", financer);
 
-        // Set A4 Vertical Block above Terms & Conditions
-        document.getElementById("a4-fin-company").innerText = financer;
-        document.getElementById("a4-fin-appno").innerText = appNo;
-        document.getElementById("a4-fin-dp").innerText = `₹${dpVal.toFixed(2)} (${dpMode})`;
-        document.getElementById("a4-fin-scheme").innerText = scheme;
-        document.getElementById("a4-fin-loan").innerText = `₹${loanVal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        safeSetText("a4-fin-company", financer);
+        safeSetText("a4-fin-appno", appNo);
+        safeSetText("a4-fin-dp", `₹${dpVal.toFixed(2)} (${dpMode})`);
+        safeSetText("a4-fin-scheme", scheme);
+        safeSetText("a4-fin-loan", `₹${loanVal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
     } else {
         if (financeBox) financeBox.classList.add("hidden");
         if (a4FinBlock) a4FinBlock.classList.add("hidden");
 
-        const cashAmt = parseFloat(document.getElementById("pay-cash-amount").value) || 0.0;
-        const cardAmt = parseFloat(document.getElementById("pay-card-amount").value) || 0.0;
-        const upiAmt = parseFloat(document.getElementById("pay-upi-amount").value) || 0.0;
+        const cashAmt = parseFloat(document.getElementById("pay-cash-amount")?.value) || 0.0;
+        const cardAmt = parseFloat(document.getElementById("pay-card-amount")?.value) || 0.0;
+        const upiAmt = parseFloat(document.getElementById("pay-upi-amount")?.value) || 0.0;
         const totalReceived = cashAmt + cardAmt + upiAmt;
         const balance = netTotal - totalReceived;
 
-        document.getElementById("pay-calc-grand-total").innerText = `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-        document.getElementById("pay-received-total").innerText = `₹${totalReceived.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        safeSetText("pay-calc-grand-total", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
+        safeSetText("pay-received-total", `₹${totalReceived.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
 
         const balanceLabel = document.getElementById("pay-balance-label");
         const balanceAmount = document.getElementById("pay-balance-amount");
         const statusBadge = document.getElementById("pay-status-badge");
 
-        if (netTotal === 0 && totalReceived === 0) {
-            balanceLabel.innerText = "Balance Due / Pending:";
-            balanceAmount.innerText = "₹0.00";
-            balanceAmount.className = "text-sm font-extrabold text-gray-500";
-            statusBadge.classList.add("hidden");
-        } else if (Math.abs(balance) < 0.01) {
-            balanceLabel.innerText = "Balance Due / Pending:";
-            balanceAmount.innerText = "₹0.00";
-            balanceAmount.className = "text-sm font-extrabold text-green-700";
-            statusBadge.innerText = "✅ FULLY SETTLED / PAID";
-            statusBadge.className = "text-xs font-extrabold p-2 rounded-lg text-center mt-1 bg-green-100 text-green-900 border border-green-300";
-            statusBadge.classList.remove("hidden");
-        } else if (totalReceived < netTotal) {
-            balanceLabel.innerText = "Balance Due / Pending:";
-            balanceAmount.innerText = `₹${balance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            balanceAmount.className = "text-sm font-extrabold text-red-600";
-            statusBadge.innerText = `⚠️ PARTIAL PAYMENT (Pending Balance: ₹${balance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})})`;
-            statusBadge.className = "text-xs font-extrabold p-2 rounded-lg text-center mt-1 bg-amber-100 text-amber-900 border border-amber-300";
-            statusBadge.classList.remove("hidden");
-        } else {
-            const excess = totalReceived - netTotal;
-            balanceLabel.innerText = "Change to Return:";
-            balanceAmount.innerText = `₹${excess.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            balanceAmount.className = "text-sm font-extrabold text-blue-700";
-            statusBadge.innerText = `💵 OVERPAID! Return Change to Customer: ₹${excess.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            statusBadge.className = "text-xs font-extrabold p-2 rounded-lg text-center mt-1 bg-blue-100 text-blue-900 border border-blue-300";
-            statusBadge.classList.remove("hidden");
+        if (balanceLabel && balanceAmount && statusBadge) {
+            if (netTotal === 0 && totalReceived === 0) {
+                balanceLabel.innerText = "Balance Due / Pending:";
+                balanceAmount.innerText = "₹0.00";
+                balanceAmount.className = "text-sm font-extrabold text-gray-500";
+                statusBadge.classList.add("hidden");
+            } else if (Math.abs(balance) < 0.01) {
+                balanceLabel.innerText = "Balance Due / Pending:";
+                balanceAmount.innerText = "₹0.00";
+                balanceAmount.className = "text-sm font-extrabold text-green-700";
+                statusBadge.innerText = "✅ FULLY SETTLED / PAID";
+                statusBadge.className = "text-xs font-extrabold p-2 rounded-lg text-center mt-1 bg-green-100 text-green-900 border border-green-300";
+                statusBadge.classList.remove("hidden");
+            } else if (totalReceived < netTotal) {
+                balanceLabel.innerText = "Balance Due / Pending:";
+                balanceAmount.innerText = `₹${balance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                balanceAmount.className = "text-sm font-extrabold text-red-600";
+                statusBadge.innerText = `⚠️ PARTIAL PAYMENT (Pending Balance: ₹${balance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})})`;
+                statusBadge.className = "text-xs font-extrabold p-2 rounded-lg text-center mt-1 bg-amber-100 text-amber-900 border border-amber-300";
+                statusBadge.classList.remove("hidden");
+            } else {
+                const excess = totalReceived - netTotal;
+                balanceLabel.innerText = "Change to Return:";
+                balanceAmount.innerText = `₹${excess.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                balanceAmount.className = "text-sm font-extrabold text-blue-700";
+                statusBadge.innerText = `💵 OVERPAID! Return Change to Customer: ₹${excess.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                statusBadge.className = "text-xs font-extrabold p-2 rounded-lg text-center mt-1 bg-blue-100 text-blue-900 border border-blue-300";
+                statusBadge.classList.remove("hidden");
+            }
         }
 
         const modes = [];
@@ -1021,12 +1042,14 @@ function updateInvoicePreview() {
         if (cardAmt > 0) modes.push(`Card: ₹${cardAmt.toFixed(2)}`);
         if (upiAmt > 0) modes.push(`UPI: ₹${upiAmt.toFixed(2)}`);
 
-        if (modes.length === 0) {
-            previewPm.innerText = "Cash";
-        } else if (modes.length === 1 && cashAmt > 0 && Math.abs(cashAmt - netTotal) < 0.01) {
-            previewPm.innerText = "Cash";
-        } else {
-            previewPm.innerText = modes.join(" | ");
+        if (previewPm) {
+            if (modes.length === 0) {
+                previewPm.innerText = "Cash";
+            } else if (modes.length === 1 && cashAmt > 0 && Math.abs(cashAmt - netTotal) < 0.01) {
+                previewPm.innerText = "Cash";
+            } else {
+                previewPm.innerText = modes.join(" | ");
+            }
         }
     }
 }
