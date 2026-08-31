@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Staff Portal Login - RC Mobiles &amp; Services</title>
+<title>Sign In - RC Mobiles &amp; Services</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -15,11 +15,8 @@
                 colors: {
                     "primary-container": "#001f3f",
                     "background": "#f8fafc",
-                    "surface-container-high": "#e2e8f0",
-                    "on-surface": "#0f172a",
                     "surface": "#ffffff",
-                    "primary": "#001f3f",
-                    "secondary": "#475569"
+                    "primary": "#001f3f"
                 },
                 fontFamily: {
                     sans: ["'Plus Jakarta Sans'", "Inter", "sans-serif"],
@@ -35,33 +32,27 @@
 </head>
 <body class="bg-gradient-to-br from-slate-100 via-blue-50/40 to-slate-200/60 min-h-screen flex flex-col items-center justify-center p-4 font-sans text-slate-800 antialiased selection:bg-blue-900 selection:text-white">
 
-<main class="w-full max-w-md relative z-10 space-y-6">
+<main class="w-full max-w-sm relative z-10 space-y-6">
   <!-- Brand Logo & Store Header -->
-  <div class="text-center space-y-2.5">
+  <div class="text-center space-y-3">
     <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-white shadow-md border border-slate-200/80">
-      <img id="loginLogoImg" alt="RC Mobiles Logo" class="h-12 w-auto object-contain" src="/api/uploads/logo.png" onerror="this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuAXjhHbY0-we_FHBB2d57HhBMEorsnwgyJLjZRGMn3V8ySRRHJBOYi9NbIdjd61FopF81JZ53g2B53agw_S4U3r7Czz7ya3_cGHdchS8y7-Lnn1OuQCDWKg5yMY91Utovo4OovFRdc15BJ-P5_sfRbgcADXN6nGTUAldkuYCyDXqybVEUvQOpl7acV_OtnrhT3DhVfqRfHDW2bwV7lljIqswwN9w5oUFt_HTNc7v9bugXMhxX2rdcLVdpWGFHeJQD_2Ew'">
+      <img id="loginLogoImg" alt="RC Mobiles Logo" class="h-12 w-auto object-contain" src="/logo.png" onerror="this.src='/Images/Main_Logo.png'">
     </div>
     <div>
-      <h1 class="font-heading text-2xl sm:text-3xl font-black tracking-tight text-slate-900 uppercase">RC MOBILES &amp; SERVICES</h1>
-      <p class="text-xs text-slate-600 font-semibold mt-0.5">Enterprise GST Billing &amp; Stock ERP</p>
-      <p class="text-[11px] text-slate-500 font-medium mt-1">NTR Circle, Madakasira, Ananthapur Dist, AP &bull; <span class="font-semibold text-slate-700">GSTIN: 37APVPR6953F1Z1</span></p>
+      <h1 class="font-heading text-2xl font-black tracking-tight text-slate-900 uppercase">RC MOBILES &amp; SERVICES</h1>
+      <p class="text-xs text-slate-500 font-semibold mt-0.5">Billing &amp; Stock ERP Portal</p>
     </div>
   </div>
 
   <!-- Main Login Card (Clean Light Theme) -->
-  <div class="bg-white rounded-3xl p-8 shadow-xl border border-slate-200/80 space-y-5">
-    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-      <div class="flex items-center gap-2 text-slate-900">
-        <span class="material-symbols-outlined text-primary-container text-xl">verified_user</span>
-        <h2 class="font-extrabold text-sm tracking-tight text-slate-900">Staff Authentication Portal</h2>
-      </div>
-      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-800 border border-blue-200 uppercase tracking-wider">
-        256-Bit SSL
-      </span>
+  <div class="bg-white rounded-3xl p-7 shadow-xl border border-slate-200/80 space-y-5">
+    <div>
+      <h2 class="font-extrabold text-lg tracking-tight text-slate-900">Sign In</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Enter your credentials to access the portal</p>
     </div>
 
     <!-- Error Alert Box -->
-    <div id="loginAlert" class="hidden p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2.5 shadow-sm">
+    <div id="loginAlert" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2.5 shadow-sm">
       <span class="material-symbols-outlined text-red-600 text-lg shrink-0">error</span>
       <span id="loginAlertText" class="flex-1">Invalid credentials</span>
     </div>
@@ -69,15 +60,15 @@
     <!-- Login Form -->
     <form id="loginForm" class="space-y-4 text-xs" onsubmit="handleLogin(event)">
       <div>
-        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-[11px]">Staff Username / ID *</label>
+        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-[11px]">Username or Employee ID</label>
         <div class="relative">
           <span class="material-symbols-outlined absolute left-3.5 top-3 text-slate-400 text-lg">person</span>
-          <input type="text" id="loginUsername" required autocomplete="username" placeholder="Enter Username or Employee ID" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-primary-container focus:border-primary-container focus:outline-none transition-all">
+          <input type="text" id="loginUsername" required autocomplete="username" autofocus placeholder="Enter Username or Employee ID" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-primary-container focus:border-primary-container focus:outline-none transition-all">
         </div>
       </div>
 
       <div>
-        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-[11px]">Secure Password *</label>
+        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-[11px]">Password</label>
         <div class="relative">
           <span class="material-symbols-outlined absolute left-3.5 top-3 text-slate-400 text-lg">lock</span>
           <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="Enter Password" class="w-full pl-10 pr-11 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-primary-container focus:border-primary-container focus:outline-none transition-all">
@@ -87,58 +78,22 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-between text-xs pt-1">
+      <div class="flex items-center justify-between text-xs pt-0.5">
         <label class="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 font-medium select-none">
           <input type="checkbox" id="rememberMe" checked class="rounded border-slate-300 bg-white text-primary-container focus:ring-primary-container">
-          <span class="text-xs font-semibold">Remember login on this terminal</span>
+          <span class="text-xs font-semibold">Remember me</span>
         </label>
       </div>
 
       <button type="submit" id="loginSubmitBtn" class="w-full bg-primary-container hover:bg-slate-900 text-white py-3 rounded-xl font-extrabold text-sm tracking-wide transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-[0.99]">
-        <span class="material-symbols-outlined text-lg">lock_open</span> Secure Login
+        <span class="material-symbols-outlined text-lg">login</span> Sign In
       </button>
     </form>
-
-    <!-- Designation Badges Reference -->
-    <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider">
-      <span class="flex items-center gap-1.5 text-purple-900 font-extrabold bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200">
-        <span class="w-2 h-2 rounded-full bg-purple-600"></span> Super Admin
-      </span>
-      <span class="flex items-center gap-1.5 text-blue-900 font-bold bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-        <span class="w-2 h-2 rounded-full bg-blue-600"></span> Manager
-      </span>
-      <span class="flex items-center gap-1.5 text-emerald-900 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-        <span class="w-2 h-2 rounded-full bg-emerald-600"></span> Sales Staff
-      </span>
-    </div>
   </div>
 
-  <!-- Software Copyright & Developer Credits Footer -->
-  <footer class="text-center space-y-2.5 text-[11px] text-slate-500 font-medium pt-1">
-    <p class="flex items-center justify-center gap-1">
-      <span class="material-symbols-outlined text-emerald-600 text-sm">shield</span>
-      Protected by Rate-Limiting &bull; Role-Based Authorization
-    </p>
-    
-    <div class="bg-white/80 backdrop-blur-sm border border-slate-200/90 rounded-2xl p-3.5 space-y-1.5 shadow-sm text-slate-600">
-      <p class="font-extrabold text-slate-900 text-xs tracking-wide">
-        &copy; All Rights Reserved by <a href="https://www.hreeem.com" target="_blank" class="text-blue-700 hover:underline">Hreeem Softech Solutions</a>
-      </p>
-      <p class="text-[11px] text-slate-600 font-semibold">
-        Designed &amp; Developed by <span class="text-slate-900 font-extrabold">Bharath Kumar</span> &amp; <span class="text-slate-900 font-extrabold">Darshan Kumar</span>
-      </p>
-      <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-slate-500 pt-1 border-t border-slate-100">
-        <a href="https://www.hreeem.com" target="_blank" class="hover:text-blue-600 font-semibold">🌐 www.hreeem.com</a>
-        <span>&bull;</span>
-        <a href="mailto:support@hreeem.com" class="hover:text-blue-600 font-semibold">✉️ support@hreeem.com</a>
-        <span>&bull;</span>
-        <a href="mailto:bharath.kumar@hreeem.com" class="hover:text-blue-600 font-semibold">✉️ bharath.kumar@hreeem.com</a>
-        <span>&bull;</span>
-        <a href="tel:7975774472" class="hover:text-blue-600 font-semibold">📞 7975774472</a>
-        <span>&bull;</span>
-        <a href="https://wa.me/918453036381" target="_blank" class="hover:text-emerald-600 font-semibold">💬 WA: 8453036381</a>
-      </div>
-    </div>
+  <!-- Clean Minimalist Footer -->
+  <footer class="text-center text-[11px] text-slate-400 font-medium">
+    <p>&copy; 2026 RC Mobiles &amp; Services. All rights reserved.</p>
   </footer>
 </main>
 
@@ -185,7 +140,7 @@ async function handleLogin(e) {
     }
 
     btn.disabled = true;
-    btn.innerHTML = `<span class="material-symbols-outlined text-lg animate-spin">progress_activity</span> Authenticating...`;
+    btn.innerHTML = `<span class="material-symbols-outlined text-lg animate-spin">progress_activity</span> Signing In...`;
 
     try {
         const res = await fetch("/api/auth/login", {
@@ -206,13 +161,13 @@ async function handleLogin(e) {
         } else {
             showAlert(data.error || "Invalid username or password");
             btn.disabled = false;
-            btn.innerHTML = `<span class="material-symbols-outlined text-lg">lock_open</span> Secure Login`;
+            btn.innerHTML = `<span class="material-symbols-outlined text-lg">login</span> Sign In`;
         }
     } catch (err) {
         console.error("Login error:", err);
         showAlert("Connection failed. Please ensure the backend server is running.");
         btn.disabled = false;
-        btn.innerHTML = `<span class="material-symbols-outlined text-lg">lock_open</span> Secure Login`;
+        btn.innerHTML = `<span class="material-symbols-outlined text-lg">login</span> Sign In`;
     }
 }
 
