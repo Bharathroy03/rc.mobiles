@@ -215,7 +215,7 @@
         }
     </style>
 </head>
-<body class="bg-background text-on-surface font-sans antialiased overflow-hidden flex h-screen">
+<body class="bg-background text-on-surface font-sans antialiased overflow-hidden flex h-screen h-[100dvh]">
 
 <!-- Mobile Drawer Backdrop Overlay -->
 <div id="mobileNavBackdrop" onclick="toggleMobileDrawer()" class="no-print fixed inset-0 bg-slate-900/60 z-40 hidden md:hidden transition-opacity"></div>
@@ -225,7 +225,7 @@
 <div class="px-6 mb-8 flex justify-between items-center">
 <div>
 <h1 class="font-heading text-xl font-extrabold text-primary flex items-center">
-<img id="sidebarLogoImg" alt="RC Mobiles Logo" class="h-8 w-auto inline-block mr-2 object-contain" src="/api/uploads/logo.png" onerror="this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuAXjhHbY0-we_FHBB2d57HhBMEorsnwgyJLjZRGMn3V8ySRRHJBOYi9NbIdjd61FopF81JZ53g2B53agw_S4U3r7Czz7ya3_cGHdchS8y7-Lnn1OuQCDWKg5yMY91Utovo4OovFRdc15BJ-P5_sfRbgcADXN6nGTUAldkuYCyDXqybVEUvQOpl7acV_OtnrhT3DhVfqRfHDW2bwV7lljIqswwN9w5oUFt_HTNc7v9bugXMhxX2rdcLVdpWGFHeJQD_2Ew'">RC Mobiles
+<img id="sidebarLogoImg" alt="RC Mobiles Logo" class="h-8 w-auto inline-block mr-2 object-contain" src="/logo.png" onerror="this.src='/Images/Main_Logo.png'">RC Mobiles
 </h1>
 <p class="text-xs text-gray-500 font-medium">Invoice ERP for RC Mobiles</p>
 </div>
@@ -279,7 +279,7 @@
 </nav>
 
 <!-- Main Layout Workspace -->
-<main class="flex-1 flex flex-col h-full ml-0 md:ml-64 w-full bg-surface-container">
+<main class="flex-1 min-h-0 flex flex-col h-full h-[100dvh] ml-0 md:ml-64 w-full bg-surface-container">
 <!-- Top App Bar -->
 <header class="no-print flex justify-between items-center h-16 px-4 sm:px-6 w-full bg-surface border-b border-gray-200 shadow-sm z-30 shrink-0">
 <div class="flex items-center gap-3">
@@ -310,10 +310,10 @@
 </div>
 
 <!-- Two Column Layout Area -->
-<div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+<div class="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden relative">
 <!-- LEFT PANEL: Input Form -->
-<section id="posFormSection" class="no-print w-full md:w-1/2 flex flex-col h-full bg-surface relative z-10 border-r border-gray-200 shadow-sm">
-<div class="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 space-y-6 pb-40 md:pb-36">
+<section id="posFormSection" class="no-print w-full md:w-1/2 flex flex-col h-full min-h-0 bg-surface relative z-10 border-r border-gray-200 shadow-sm">
+<div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-3.5 sm:p-6 space-y-5 pb-6">
 
 <!-- 1. Customer Details Card -->
 <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm" id="customerDetailsCard">
