@@ -22,9 +22,22 @@ SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", os.getenv("SUPABASE_KEY", 
 # Initialize Supabase Client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Flask Application Setup
-app = Flask(__name__, static_folder="../frontend", static_url_path="")
+# Flask Application Setup - dynamically locate frontend folder across environments
+base_dir = os.path.dirname(os.path.abspath(__file__))
+frontend_dir = os.path.abspath(os.path.join(base_dir, "..", "frontend"))
+if not os.path.exists(frontend_dir):
+    frontend_dir = os.path.abspath(os.path.join(base_dir, "frontend"))
+if not os.path.exists(frontend_dir):
+    frontend_dir = os.path.abspath(os.path.join(os.getcwd(), "frontend"))
+
+app = Flask(__name__, static_folder=frontend_dir, static_url_path="")
 CORS(app)
+
+@app.route("/")
+def serve_root():
+    if os.path.exists(os.path.join(app.static_folder, "index.html")):
+        return send_from_directory(app.static_folder, "index.html")
+    return "RC Mobiles API Server Online"
 
 # Ensure upload directory exists (handle serverless /tmp if read-only filesystem)
 IS_SERVERLESS = bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
