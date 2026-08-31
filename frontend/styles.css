@@ -1239,3 +1239,15 @@ button:active:not(:disabled), .btn:active:not(:disabled) {
     }
 }
 
+/* Guard: Instantly Hide Mobile Floating Action Pill when Side Drawer or Modals are Open */
+#sideNav.translate-x-0 ~ * #mobileFloatingActions,
+#sideNav:not(.-translate-x-full) ~ * #mobileFloatingActions,
+body:has(#sideNav.translate-x-0) #mobileFloatingActions,
+body:has(#sideNav:not(.-translate-x-full)) #mobileFloatingActions,
+body:has(#mobileNavBackdrop:not(.hidden)) #mobileFloatingActions {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
