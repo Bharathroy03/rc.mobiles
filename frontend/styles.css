@@ -1196,6 +1196,19 @@ button:active:not(:disabled), .btn:active:not(:disabled) {
     animation: toastSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
+/* Responsive Mobile-Safe Toast Container & Elements */
+#appToastContainer {
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+#appToastContainer > div {
+    max-width: 100% !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    box-sizing: border-box !important;
+}
+
 /* Custom Ultra-Smooth Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
