@@ -1164,19 +1164,29 @@ def get_dashboard_stats():
 # ---------------- API: FILE UPLOADS & LOGO SERVE ----------------
 @app.route("/api/uploads/<path:filename>")
 def serve_upload(filename):
+    # 1. Check in configured UPLOAD_FOLDER
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
     if os.path.exists(file_path):
         return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
-    if "logo" in filename.lower() or filename.endswith((".png", ".svg", ".jpg", ".jpeg")):
-        svg = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
-          <rect width="200" height="60" rx="12" fill="#001f3f"/>
-          <circle cx="32" cy="30" r="18" fill="#2563eb"/>
-          <rect x="25" y="21" width="14" height="18" rx="2" fill="none" stroke="#ffffff" stroke-width="2"/>
-          <circle cx="32" cy="35" r="1" fill="#ffffff"/>
-          <text x="60" y="32" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="900" font-size="17">RC MOBILES</text>
-          <text x="60" y="45" fill="#93c5fd" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" letter-spacing="1">SALES &amp; SERVICES</text>
-        </svg>'''
-        return svg, 200, {"Content-Type": "image/svg+xml"}
+    
+    # 2. Check in backend/uploads directory
+    backend_uploads = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
+    if os.path.exists(os.path.join(backend_uploads, filename)):
+        return send_from_directory(backend_uploads, filename)
+
+    # 3. Check in Images directory (Main_Logo.png)
+    images_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Images")
+    if "logo" in filename.lower() and os.path.exists(os.path.join(images_dir, "Main_Logo.png")):
+        return send_from_directory(images_dir, "Main_Logo.png")
+    if os.path.exists(os.path.join(images_dir, filename)):
+        return send_from_directory(images_dir, filename)
+
+    # 4. Check in frontend static folder
+    if os.path.exists(os.path.join(app.static_folder, filename)):
+        return send_from_directory(app.static_folder, filename)
+    if "logo" in filename.lower() and os.path.exists(os.path.join(app.static_folder, "logo.png")):
+        return send_from_directory(app.static_folder, "logo.png")
+
     return jsonify({"error": "File not found"}), 404
 
 # ---------------- API: REPORTS EXPORT (CSV & EXCEL) ----------------
