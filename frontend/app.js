@@ -609,9 +609,12 @@ function applyStoreSettingsToUI(s) {
     if (!s) return;
     document.getElementById("topStoreName").textContent = `${s.store_name || "RC Mobiles"} - Madakasira`;
     if (s.logo_path) {
+        const pLogo = document.getElementById("previewLogoImg");
+        if (pLogo) pLogo.src = s.logo_path;
+        const wLogo = document.getElementById("previewWatermarkLogo");
+        if (wLogo) wLogo.src = s.logo_path;
         document.getElementById("sidebarLogoImg").src = s.logo_path;
         document.getElementById("topAvatarImg").src = s.logo_path;
-        document.getElementById("previewLogoImg").src = s.logo_path;
     }
     document.getElementById("preview-store-name").textContent = s.store_name || "RC MOBILES";
     document.getElementById("preview-store-address").textContent = s.address || "NTR Circle, Madakasira, Ananthapur (Sri Sathya Sai district region), Andhra Pradesh 515301";
