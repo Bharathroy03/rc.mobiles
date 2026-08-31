@@ -184,16 +184,23 @@ RC_AUTH.initPageAuth();
 window.toggleMobileDrawer = function() {
     const nav = document.getElementById("sideNav");
     const backdrop = document.getElementById("mobileNavBackdrop");
+    const mobFab = document.getElementById("mobileFloatingActions");
     if (!nav) return;
     const isClosed = nav.classList.contains("-translate-x-full");
     if (isClosed) {
         nav.classList.remove("-translate-x-full");
         nav.classList.add("translate-x-0");
         if (backdrop) backdrop.classList.remove("hidden");
+        if (mobFab) {
+            mobFab.classList.add("opacity-0", "pointer-events-none", "scale-95");
+        }
     } else {
         nav.classList.remove("translate-x-0");
         nav.classList.add("-translate-x-full");
         if (backdrop) backdrop.classList.add("hidden");
+        if (mobFab) {
+            mobFab.classList.remove("opacity-0", "pointer-events-none", "scale-95");
+        }
     }
 };
 
