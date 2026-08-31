@@ -200,6 +200,7 @@ window.toggleMobileDrawer = function() {
 window.switchMobileWorkspace = function(view) {
     const formSec = document.getElementById("posFormSection");
     const prevSec = document.getElementById("invoicePreviewSection");
+    const mobFab = document.getElementById("mobileFloatingActions");
     const formBtn = document.getElementById("mobTabFormBtn");
     const prevBtn = document.getElementById("mobTabPreviewBtn");
 
@@ -208,6 +209,10 @@ window.switchMobileWorkspace = function(view) {
     if (view === "form") {
         formSec.classList.remove("hidden");
         formSec.classList.add("flex");
+        if (mobFab && window.innerWidth < 768) {
+            mobFab.classList.remove("hidden");
+            mobFab.classList.add("flex");
+        }
         if (window.innerWidth < 768) {
             prevSec.classList.add("hidden");
             prevSec.classList.remove("flex");
@@ -226,6 +231,10 @@ window.switchMobileWorkspace = function(view) {
         if (window.innerWidth < 768) {
             formSec.classList.add("hidden");
             formSec.classList.remove("flex");
+            if (mobFab) {
+                mobFab.classList.add("hidden");
+                mobFab.classList.remove("flex");
+            }
         } else {
             formSec.classList.remove("hidden");
             formSec.classList.add("flex");
