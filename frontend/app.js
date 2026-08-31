@@ -688,7 +688,7 @@ function renderLineItemRows() {
                     <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Item / Model Name</label>
                     <input class="w-full border-gray-300 rounded p-2 text-sm focus:ring-0 focus:border-primary-container font-medium" 
                         id="input-item-desc-${item.id}" 
-                        placeholder="Enter Item / Model Name (e.g. iPhone 15, Samsung S24)" 
+                        placeholder="Enter Item / Model Name" 
                         type="text" 
                         value="${escapeHtml(item.desc)}"
                         oninput="onItemFieldChange(${item.id}, 'desc', this.value)">
@@ -721,7 +721,7 @@ function renderLineItemRows() {
                 <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">IMEI / Serial Number</label>
                 <input class="w-full border-gray-300 rounded p-2 text-sm focus:ring-0 focus:border-primary-container" 
                     id="input-item-imei-${item.id}" 
-                    placeholder="15 digits IMEI number / Serial" 
+                    placeholder="Enter 15-digit IMEI or Serial Number (Optional)" 
                     type="text" 
                     value="${escapeHtml(item.imei)}"
                     oninput="onItemFieldChange(${item.id}, 'imei', this.value)">
