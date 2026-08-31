@@ -1,4 +1,4 @@
-﻿# RC Mobiles & Services — GST Invoice & ERP Management System
+# RC Mobiles & Services — GST Invoice & ERP Management System
 
 A comprehensive, state-of-the-art POS Billing, Inventory, and Stock Management ERP software for **RC Mobiles** (Madakasira, Andhra Pradesh).
 
