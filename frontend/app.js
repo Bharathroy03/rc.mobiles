@@ -660,6 +660,16 @@ function applyStoreSettingsToUI(s) {
     if (setPhone) setPhone.value = s.phone || "";
     const setEmail = document.getElementById("setEmail");
     if (setEmail) setEmail.value = s.email || "";
+    const setTerms = document.getElementById("setTerms");
+    if (setTerms && s.terms) setTerms.value = s.terms;
+
+    const termsList = document.getElementById("preview-terms-list");
+    if (termsList && s.terms) {
+        const lines = s.terms.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+        if (lines.length > 0) {
+            termsList.innerHTML = lines.map(l => `<li>${escapeHtml(l.replace(/^\d+[\.\)]\s*/, ''))}</li>`).join("");
+        }
+    }
 }
 
 // ---------------- CATALOG PRODUCTS ----------------
@@ -1739,7 +1749,8 @@ async function handleSettingsSubmit(e) {
         address: document.getElementById("setAddress").value.trim(),
         gstin: document.getElementById("setGstin").value.trim(),
         phone: document.getElementById("setPhone").value.trim(),
-        email: document.getElementById("setEmail").value.trim()
+        email: document.getElementById("setEmail").value.trim(),
+        terms: document.getElementById("setTerms") ? document.getElementById("setTerms").value.trim() : ""
     };
 
     try {
