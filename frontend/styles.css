@@ -34,6 +34,26 @@
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ==========================================================================
+   A4 INVOICE SHEET TYPOGRAPHY & FONT STYLING (CLEAN & SHARP)
+   ========================================================================== */
+#a4PaperElement,
+.a4-paper,
+#a4PaperElement * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#a4PaperElement #preview-store-name,
+#a4PaperElement h1,
+#a4PaperElement h2,
+#a4PaperElement h3,
+#a4PaperElement .invoice-title {
+    font-family: 'Outfit', 'Inter', sans-serif !important;
+    letter-spacing: -0.015em;
+}
+
 /* Reset & Base Setup */
 *, ::before, ::after {
     box-sizing: border-box;
