@@ -1162,12 +1162,74 @@ function triggerPrintInvoice() {
     }, 300);
 }
 
-// ---------------- INVOICE PERSISTENCE ----------------
+// ---------------- INVOICE PERSISTENCE & DUAL-BILLING PREVENTION ----------------
+let isSavingInvoice = false;
+let lastSaveClickTimestamp = 0;
+
 async function saveInvoice(shouldPrint = true) {
+    const now = Date.now();
+    // Strict 3-second debounce protection & lock check
+    if (isSavingInvoice || (now - lastSaveClickTimestamp < 3000)) {
+        console.warn("Save invoice request debounced (preventing double billing).");
+        return;
+    }
+
     // ── Mandatory field validation before any DB operation ──
     if (!validateInvoiceForm(shouldPrint)) {
         return; // Stop — validation errors shown inline
     }
+
+    const genBtn = document.getElementById("btnGenerateInvoice");
+    const saveDraftBtn = document.getElementById("btnSaveDraft");
+    const originalGenHtml = genBtn ? genBtn.innerHTML : "";
+    const originalDraftHtml = saveDraftBtn ? saveDraftBtn.innerHTML : "";
+
+    // Lock process and show visual loading spinner animation
+    isSavingInvoice = true;
+    lastSaveClickTimestamp = now;
+
+    if (genBtn) {
+        genBtn.disabled = true;
+        genBtn.classList.add("opacity-75", "cursor-not-allowed");
+        if (shouldPrint) {
+            genBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Generating &amp; Printing...</span>
+            `;
+        }
+    }
+    if (saveDraftBtn) {
+        saveDraftBtn.disabled = true;
+        saveDraftBtn.classList.add("opacity-75", "cursor-not-allowed");
+        if (!shouldPrint) {
+            saveDraftBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-primary-container inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Saving Draft...</span>
+            `;
+        }
+    }
+
+    const restoreButtonsState = () => {
+        isSavingInvoice = false;
+        if (genBtn) {
+            genBtn.disabled = false;
+            genBtn.classList.remove("opacity-75", "cursor-not-allowed");
+            genBtn.innerHTML = editingInvoiceId 
+                ? `<span class="material-symbols-outlined text-base">update</span> <span>Update &amp; Print</span>`
+                : `<span class="material-symbols-outlined text-base">receipt_long</span> <span>Generate &amp; Print</span>`;
+        }
+        if (saveDraftBtn) {
+            saveDraftBtn.disabled = false;
+            saveDraftBtn.classList.remove("opacity-75", "cursor-not-allowed");
+            saveDraftBtn.innerHTML = `<span class="material-symbols-outlined text-base">save</span> <span>Save Draft</span>`;
+        }
+    };
 
     const custName = document.getElementById("input-customer-name").value.trim() || "Cash Customer";
     const custMobile = document.getElementById("input-customer-mobile").value.trim();
@@ -1226,6 +1288,7 @@ async function saveInvoice(shouldPrint = true) {
             message: "Please enter at least one Item / Model Name and a valid selling price before generating or printing an invoice.",
             type: "warning"
         });
+        restoreButtonsState();
         return;
     }
 
@@ -1295,8 +1358,6 @@ async function saveInvoice(shouldPrint = true) {
 
             if (editingInvoiceId) {
                 editingInvoiceId = null;
-                const genBtn = document.getElementById("btnGenerateInvoice");
-                if (genBtn) genBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">receipt_long</span> Generate &amp; Print Invoice`;
                 loadStoreSettings();
             } else {
                 // For newly generated invoice, automatically prepare the POS form for the NEXT sequential invoice
@@ -1350,6 +1411,9 @@ async function saveInvoice(shouldPrint = true) {
             message: "Unable to reach the backend server. Please verify that the Flask server is running and try again.",
             type: "error"
         });
+    } finally {
+        // Enforce a full 3-second lockout before re-enabling buttons
+        setTimeout(restoreButtonsState, 3000);
     }
 }
 
