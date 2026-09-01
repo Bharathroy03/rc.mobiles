@@ -998,32 +998,36 @@ def create_invoice():
     yyyymm = datetime.utcnow().strftime("%Y%m")
 
     # Fetch existing invoice numbers to prevent duplicate key errors (23505)
-    all_invs = supabase.table("invoices").select("invoice_number").execute()
-    existing_numbers = set(inv.get("invoice_number") for inv in (all_invs.data or []) if inv.get("invoice_number"))
-    
     max_counter = 1000
-    for num in existing_numbers:
-        parts = num.split("-")
-        if len(parts) >= 3 and parts[-1].isdigit():
-            val = int(parts[-1])
-            if val > max_counter:
-                max_counter = val
+    try:
+        all_invs = supabase.table("invoices").select("invoice_number").order("id", desc=True).limit(500).execute()
+        for inv in (all_invs.data or []):
+            num = inv.get("invoice_number") or ""
+            parts = num.split("-")
+            if len(parts) >= 3 and parts[-1].isdigit():
+                val = int(parts[-1])
+                if val > max_counter:
+                    max_counter = val
+    except Exception as e_chk:
+        print("Invoice counter fetch error:", e_chk)
 
-    next_counter = max_counter + 1
-    # Ensure strictly sequential unique invoice number
-    req_number = data.get("invoice_number")
-    if not req_number or req_number in existing_numbers:
-        inv_number = f"{prefix}-{yyyymm}-{next_counter}"
-        current_used_counter = next_counter
-        future_next_counter = next_counter + 1
+    # Find the first guaranteed unique invoice number
+    req_number = (data.get("invoice_number") or "").strip()
+    candidate_counter = max_counter + 1
+    
+    if req_number:
+        # Check if requested number already exists
+        try:
+            chk_req = supabase.table("invoices").select("id").eq("invoice_number", req_number).execute()
+            if chk_req.data and len(chk_req.data) > 0:
+                # Already exists, fallback to guaranteed unique candidate
+                inv_number = f"{prefix}-{yyyymm}-{candidate_counter}"
+            else:
+                inv_number = req_number
+        except Exception:
+            inv_number = f"{prefix}-{yyyymm}-{candidate_counter}"
     else:
-        inv_number = req_number
-        current_used_counter = next_counter
-        future_next_counter = next_counter + 1
-
-    # Update store settings with future_next_counter
-    if st_data.get("id"):
-        supabase.table("store_settings").update({"invoice_counter": future_next_counter}).eq("id", st_data["id"]).execute()
+        inv_number = f"{prefix}-{yyyymm}-{candidate_counter}"
 
     # Calculations
     subtotal = 0.0
@@ -1084,31 +1088,56 @@ def create_invoice():
         "notes": data.get("notes", "")
     }
 
-    try:
-        inv_res = supabase.table("invoices").insert(inv_payload).execute()
-        if not inv_res.data or len(inv_res.data) == 0:
-            return jsonify({"error": "Failed to create invoice in Supabase"}), 500
+    # Resilient insert with auto-retry on duplicate key collision (23505)
+    max_retries = 10
+    retry_counter = candidate_counter
+    new_invoice = None
 
-        new_invoice = inv_res.data[0]
-        new_inv_id = new_invoice["id"]
+    for attempt in range(max_retries):
+        try:
+            inv_res = supabase.table("invoices").insert(inv_payload).execute()
+            if inv_res.data and len(inv_res.data) > 0:
+                new_invoice = inv_res.data[0]
+                break
+        except Exception as err:
+            err_str = str(err).lower()
+            if "23505" in err_str or "duplicate key" in err_str or "unique constraint" in err_str:
+                retry_counter += 1
+                inv_payload["invoice_number"] = f"{prefix}-{yyyymm}-{retry_counter}"
+                print(f"Duplicate invoice number resolved. Retrying with: {inv_payload['invoice_number']}")
+            else:
+                raise err
 
-        # Insert line items
-        for p_item in processed_items:
-            p_item["invoice_id"] = new_inv_id
+    if not new_invoice:
+        return jsonify({"error": "Failed to create invoice after resolving sequence."}), 500
+
+    new_inv_id = new_invoice["id"]
+
+    # Insert line items
+    for p_item in processed_items:
+        p_item["invoice_id"] = new_inv_id
+        try:
             supabase.table("invoice_items").insert(p_item).execute()
+        except Exception as item_err:
+            print("Error inserting invoice item:", item_err)
 
-        new_invoice["items"] = processed_items
-        next_invoice_number = f"{prefix}-{yyyymm}-{future_next_counter}"
-        return jsonify({
-            "message": "Invoice created successfully", 
-            "invoice": new_invoice,
-            "next_counter": future_next_counter,
-            "next_invoice_number": next_invoice_number
-        }), 201
+    new_invoice["items"] = processed_items
+    future_next_counter = retry_counter + 1
 
-    except Exception as err:
-        print("Create invoice error:", err)
-        return jsonify({"error": str(err)}), 500
+    # Update store settings with future_next_counter
+    try:
+        if st_data.get("id"):
+            supabase.table("store_settings").update({"invoice_counter": future_next_counter}).eq("id", st_data["id"]).execute()
+    except Exception:
+        pass
+
+    next_invoice_number = f"{prefix}-{yyyymm}-{future_next_counter}"
+    return jsonify({
+        "message": "Invoice created successfully", 
+        "invoice": new_invoice,
+        "next_counter": future_next_counter,
+        "next_invoice_number": next_invoice_number
+    }), 201
 
 # ---------------- API: DASHBOARD ANALYTICS ----------------
 @app.route("/api/dashboard/stats", methods=["GET"])
