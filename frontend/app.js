@@ -911,7 +911,6 @@ function updateInvoicePreview() {
                         <div class="font-bold text-gray-900">[Item / Model Name]</div>
                         <div class="text-[10px] text-blue-600 font-semibold">IMEI/SN: [IMEI/S.NO]</div>
                     </td>
-                    <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-gray-200">8517</td>
                     <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-gray-200">1</td>
                     <td class="py-2.5 px-2.5 text-right text-gray-500 border-r border-gray-200">₹0.00</td>
                     <td class="py-2.5 px-2.5 text-right font-bold text-gray-900">₹0.00</td>
@@ -929,7 +928,6 @@ function updateInvoicePreview() {
                             <div class="font-bold text-gray-900 break-words">${escapeHtml(item.desc || "[Item / Model Name]")}</div>
                             ${item.imei ? `<div class="text-[10px] text-blue-600 font-semibold break-words">IMEI/SN: ${escapeHtml(item.imei)}</div>` : ''}
                         </td>
-                        <td class="py-2.5 px-2.5 text-center text-gray-700 border-r border-gray-200">${escapeHtml(item.hsn || '8517')}</td>
                         <td class="py-2.5 px-2.5 text-center font-bold text-gray-900 border-r border-gray-200">${q}</td>
                         <td class="py-2.5 px-2.5 text-right text-gray-800 border-r border-gray-200">₹${itemPrice.toFixed(2)}</td>
                         <td class="py-2.5 px-2.5 text-right font-bold text-gray-900">₹${lineTotal.toFixed(2)}</td>
