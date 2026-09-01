@@ -502,10 +502,10 @@ window.selectPaymentType = function(type) {
     const subFinance = document.getElementById("paySubFinance");
     const modeLabel = document.getElementById("currentModeLabel");
 
-    const activeDirectClass = "py-3 px-3 rounded-xl font-black text-xs border border-primary-container bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-sm";
-    const inactiveDirectClass = "py-3 px-3 rounded-xl font-bold text-xs border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2";
-    const activeFinanceClass = "py-3 px-3 rounded-xl font-black text-xs border border-blue-900 bg-blue-900 text-white transition-all flex items-center justify-center gap-2 shadow-sm";
-    const inactiveFinanceClass = "py-3 px-3 rounded-xl font-bold text-xs border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2";
+    const activeDirectClass = "py-2.5 px-3 rounded-xl font-extrabold text-xs sm:text-sm border border-primary-container bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap";
+    const inactiveDirectClass = "py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2 whitespace-nowrap";
+    const activeFinanceClass = "py-2.5 px-3 rounded-xl font-extrabold text-xs sm:text-sm border border-blue-900 bg-blue-900 text-white transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap";
+    const inactiveFinanceClass = "py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2 whitespace-nowrap";
 
     if (type === "finance") {
         if (btnDirect) btnDirect.className = inactiveDirectClass;

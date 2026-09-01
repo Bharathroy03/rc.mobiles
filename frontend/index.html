@@ -331,19 +331,13 @@
   </div>
 
   <div class="grid grid-cols-2 gap-2.5 pt-1">
-    <button type="button" id="payTypeBtnDirect" onclick="selectPaymentType('non-finance')" class="py-3 px-3 rounded-xl font-black text-xs border border-primary-container bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-sm">
-      <span class="material-symbols-outlined text-lg">payments</span>
-      <div class="text-left">
-        <div class="leading-tight">Non-Finance</div>
-        <div class="text-[9px] font-normal opacity-80">Direct Cash / Card / UPI</div>
-      </div>
+    <button type="button" id="payTypeBtnDirect" onclick="selectPaymentType('non-finance')" class="py-2.5 px-3 rounded-xl font-extrabold text-xs sm:text-sm border border-primary-container bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap">
+      <span class="material-symbols-outlined text-base sm:text-lg">payments</span>
+      <span>Non-Finance</span>
     </button>
-    <button type="button" id="payTypeBtnFinance" onclick="selectPaymentType('finance')" class="py-3 px-3 rounded-xl font-bold text-xs border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2">
-      <span class="material-symbols-outlined text-lg text-blue-800">credit_score</span>
-      <div class="text-left">
-        <div class="leading-tight">Finance Payment</div>
-        <div class="text-[9px] font-normal text-gray-500">Bajaj / TVS / Home Credit</div>
-      </div>
+    <button type="button" id="payTypeBtnFinance" onclick="selectPaymentType('finance')" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+      <span class="material-symbols-outlined text-base sm:text-lg text-blue-800">credit_score</span>
+      <span>Finance</span>
     </button>
   </div>
 </div>
