@@ -356,19 +356,19 @@
   <div class="space-y-3">
     <div class="w-full">
       <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Customer Name <span class="text-red-500">*</span></label>
-      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-name" placeholder="Enter Customer Name" type="text" value="" oninput="clearFieldError(this)">
+      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-name" placeholder="Enter Customer Name" type="text" value="" oninput="updateInvoicePreview(); clearFieldError(this)">
       <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-name">Customer name is required</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Mobile Number <span class="text-red-500">*</span></label>
-        <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-mobile" placeholder="10-digit number" type="tel" maxlength="15" value="" oninput="clearFieldError(this)">
+        <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-mobile" placeholder="10-digit number" type="tel" maxlength="15" value="" oninput="updateInvoicePreview(); clearFieldError(this)">
         <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-mobile">Valid mobile number required</p>
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Customer Address <span class="text-red-500">*</span></label>
-        <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-address" placeholder="Enter Customer Address / Town" type="text" value="" oninput="clearFieldError(this)">
+        <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-address" placeholder="Enter Customer Address / Town" type="text" value="" oninput="updateInvoicePreview(); clearFieldError(this)">
         <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-address">Address is required</p>
       </div>
     </div>
@@ -394,15 +394,15 @@
   <div class="grid grid-cols-12 gap-3">
     <div class="col-span-12 sm:col-span-5">
       <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Invoice No</label>
-      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-bold focus:ring-2 focus:ring-primary-container focus:outline-none text-blue-900 bg-slate-50" id="input-invoice-no" placeholder="RCM-202608-1005" type="text" value="">
+      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-bold focus:ring-2 focus:ring-primary-container focus:outline-none text-blue-900 bg-slate-50" id="input-invoice-no" placeholder="RCM-202608-1005" type="text" value="" oninput="updateInvoicePreview()">
     </div>
     <div class="col-span-6 sm:col-span-4">
       <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Select Date</label>
-      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary-container focus:outline-none cursor-pointer" id="input-date-picker" type="date">
+      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary-container focus:outline-none cursor-pointer" id="input-date-picker" type="date" onchange="updateInvoicePreview()" oninput="updateInvoicePreview()">
     </div>
     <div class="col-span-6 sm:col-span-3">
       <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Time</label>
-      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary-container focus:outline-none cursor-pointer" id="input-time-picker" type="time">
+      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary-container focus:outline-none cursor-pointer" id="input-time-picker" type="time" onchange="updateInvoicePreview()" oninput="updateInvoicePreview()">
     </div>
   </div>
 </div>
@@ -632,9 +632,9 @@
         <tr class="bg-slate-100 text-slate-900 font-extrabold border-b border-slate-300">
           <th class="py-2.5 px-2.5 w-12 text-center border-r border-slate-200">S.No</th>
           <th class="py-2.5 px-2.5 text-left border-r border-slate-200">Item / Model &amp; Serial / IMEI</th>
+          <th class="py-2.5 px-2.5 w-16 text-center border-r border-slate-200">HSN</th>
           <th class="py-2.5 px-2.5 w-12 text-center border-r border-slate-200">Qty</th>
           <th class="py-2.5 px-2.5 w-24 text-right border-r border-slate-200">Rate (₹)</th>
-          <th class="py-2.5 px-2.5 w-28 text-right border-r border-slate-200">Taxable Value (₹)</th>
           <th class="py-2.5 px-2.5 w-28 text-right">Total (₹)</th>
         </tr>
       </thead>
