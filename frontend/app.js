@@ -500,21 +500,32 @@ window.selectPaymentType = function(type) {
     const btnFinance = document.getElementById("payTypeBtnFinance");
     const subDirect = document.getElementById("paySubDirect");
     const subFinance = document.getElementById("paySubFinance");
+    const modeLabel = document.getElementById("currentModeLabel");
 
-    const activeClass = "py-2.5 px-3 rounded-lg font-bold text-xs border border-primary-container bg-primary-container text-white transition-all flex items-center justify-center gap-1.5 shadow-sm";
-    const inactiveClass = "py-2.5 px-3 rounded-lg font-bold text-xs border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-1.5";
+    const activeDirectClass = "py-3 px-3 rounded-xl font-black text-xs border border-primary-container bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-sm";
+    const inactiveDirectClass = "py-3 px-3 rounded-xl font-bold text-xs border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2";
+    const activeFinanceClass = "py-3 px-3 rounded-xl font-black text-xs border border-blue-900 bg-blue-900 text-white transition-all flex items-center justify-center gap-2 shadow-sm";
+    const inactiveFinanceClass = "py-3 px-3 rounded-xl font-bold text-xs border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2";
 
     if (type === "finance") {
-        if (btnDirect) btnDirect.className = inactiveClass;
-        if (btnFinance) btnFinance.className = activeClass;
+        if (btnDirect) btnDirect.className = inactiveDirectClass;
+        if (btnFinance) btnFinance.className = activeFinanceClass;
         if (subDirect) subDirect.classList.add("hidden");
         if (subFinance) subFinance.classList.remove("hidden");
+        if (modeLabel) {
+            modeLabel.textContent = "Finance Payment (Option B)";
+            modeLabel.className = "text-[10px] text-blue-700 font-extrabold uppercase";
+        }
     } else {
         // "non-finance"
-        if (btnDirect) btnDirect.className = activeClass;
-        if (btnFinance) btnFinance.className = inactiveClass;
+        if (btnDirect) btnDirect.className = activeDirectClass;
+        if (btnFinance) btnFinance.className = inactiveFinanceClass;
         if (subDirect) subDirect.classList.remove("hidden");
         if (subFinance) subFinance.classList.add("hidden");
+        if (modeLabel) {
+            modeLabel.textContent = "Direct Non-Finance (Option A)";
+            modeLabel.className = "text-[10px] text-emerald-700 font-extrabold uppercase";
+        }
     }
     updateInvoicePreview();
 };
@@ -672,87 +683,62 @@ function renderLineItemRows() {
         itemsList.push({ id: Date.now(), desc: "", qty: 1, price: 0.0, hsn: "8517", imei: "" });
     }
 
-    // Pre-populate product suggestions from cached products if available
-    const productOptions = (window.cachedProducts || []).slice(0, 15).map(p => 
-        `<option value="${escapeHtml(p.name)}|${p.selling_price || 0}|${p.hsn_code || '8517'}">${escapeHtml(p.name)} (₹${p.selling_price})</option>`
-    ).join("");
-
     container.innerHTML = itemsList.map((item, index) => `
-        <div class="p-3 border border-slate-200 rounded-xl bg-slate-50/70 space-y-2.5 relative group" id="item-row-${item.id}">
-            <div class="flex justify-between items-center text-xs font-bold text-slate-700 border-b border-slate-200 pb-1">
-                <span>Item #${index + 1}</span>
+        <div class="p-3 border border-gray-200 rounded-lg bg-gray-50/50 space-y-3 relative group" id="item-row-${item.id}">
+            <div class="flex justify-between items-center text-xs font-bold text-gray-700 border-b pb-1">
+                <span>Item / Model #${index + 1}</span>
                 <div class="flex items-center gap-2">
-                    <span class="text-[11px] text-slate-500 font-semibold">Total: <strong class="text-slate-900 font-extrabold" id="item-row-total-${item.id}">₹${(((item.qty || 1) * (item.price || 0.0))).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></span>
+                    <span class="text-[11px] text-slate-500 font-semibold">Line Total: <strong class="text-slate-900 font-extrabold" id="item-row-total-${item.id}">₹${(((item.qty || 1) * (item.price || 0.0))).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></span>
                     ${itemsList.length > 1 ? `
-                        <button type="button" onclick="removeItemRow(${item.id})" class="text-red-600 hover:text-red-800 text-[11px] font-bold flex items-center gap-0.5 ml-2" title="Remove Item">
-                            <span class="material-symbols-outlined text-sm">delete</span>
+                        <button type="button" onclick="removeItemRow(${item.id})" class="text-red-600 hover:text-red-800 text-[11px] font-semibold flex items-center gap-0.5 ml-2">
+                            <span class="material-symbols-outlined text-sm">delete</span> Remove
                         </button>
                     ` : ''}
                 </div>
             </div>
 
-            <!-- Row 1: Item / Model Name (Full Width Floating Fieldset with Autocomplete) -->
-            <div class="relative">
-                <fieldset class="pos-fieldset">
-                    <legend>Item / Model</legend>
-                    <input id="input-item-desc-${item.id}" 
-                        placeholder="Search or Enter Item Model" 
+            <div class="grid grid-cols-12 gap-2.5 items-end">
+                <div class="col-span-12 sm:col-span-6 relative">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Item / Model Name</label>
+                    <input class="w-full border-gray-300 rounded p-2 text-sm focus:ring-0 focus:border-primary-container font-medium" 
+                        id="input-item-desc-${item.id}" 
+                        placeholder="Enter Item / Model Name" 
                         type="text" 
                         value="${escapeHtml(item.desc)}"
                         oninput="onItemFieldChange(${item.id}, 'desc', this.value)">
-                </fieldset>
-                <div id="autocomplete-${item.id}" class="hidden absolute top-full left-0 right-0 bg-white border border-slate-300 rounded-b-xl shadow-xl z-50 max-h-48 overflow-y-auto"></div>
+                    <div id="autocomplete-${item.id}" class="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-b shadow-lg z-50 max-h-48 overflow-y-auto"></div>
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Qty</label>
+                    <input class="w-full border-gray-300 rounded p-2 text-sm text-center font-bold focus:ring-0 focus:border-primary-container" 
+                        id="input-item-qty-${item.id}" 
+                        placeholder="1" 
+                        type="number" 
+                        min="1"
+                        step="1"
+                        value="${item.qty || 1}"
+                        oninput="onItemFieldChange(${item.id}, 'qty', this.value)">
+                </div>
+                <div class="col-span-8 sm:col-span-4">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Unit Rate (₹)</label>
+                    <input class="w-full border-gray-300 rounded p-2 text-sm text-right font-bold focus:ring-0 focus:border-primary-container" 
+                        id="input-item-price-${item.id}" 
+                        placeholder="0.00" 
+                        type="number" 
+                        step="0.01"
+                        value="${item.price ? item.price : ''}"
+                        oninput="onItemFieldChange(${item.id}, 'price', this.value)">
+                </div>
             </div>
 
-            <!-- Row 2: 4-Column Grid: Suggestions | Qty | Unit Price | IMEI -->
-            <div class="grid grid-cols-12 gap-2">
-                <div class="col-span-4 sm:col-span-3">
-                    <fieldset class="pos-fieldset">
-                        <legend>Suggestions</legend>
-                        <select onchange="applyItemSuggestion(this.value, ${item.id})" class="text-xs cursor-pointer">
-                            <option value="">Select...</option>
-                            ${productOptions}
-                        </select>
-                    </fieldset>
-                </div>
-
-                <div class="col-span-2 sm:col-span-2">
-                    <fieldset class="pos-fieldset">
-                        <legend>Qty</legend>
-                        <input id="input-item-qty-${item.id}" 
-                            placeholder="1" 
-                            type="number" 
-                            min="1"
-                            step="1"
-                            class="text-center font-bold"
-                            value="${item.qty || 1}"
-                            oninput="onItemFieldChange(${item.id}, 'qty', this.value)">
-                    </fieldset>
-                </div>
-
-                <div class="col-span-3 sm:col-span-3">
-                    <fieldset class="pos-fieldset">
-                        <legend>Unit Price</legend>
-                        <input id="input-item-price-${item.id}" 
-                            placeholder="0.00" 
-                            type="number" 
-                            step="0.01"
-                            class="text-right font-bold"
-                            value="${item.price ? item.price : ''}"
-                            oninput="onItemFieldChange(${item.id}, 'price', this.value)">
-                    </fieldset>
-                </div>
-
-                <div class="col-span-3 sm:col-span-4">
-                    <fieldset class="pos-fieldset">
-                        <legend>IMEI (Optional)</legend>
-                        <input id="input-item-imei-${item.id}" 
-                            placeholder="IMEI / Serial" 
-                            type="text" 
-                            value="${escapeHtml(item.imei)}"
-                            oninput="onItemFieldChange(${item.id}, 'imei', this.value)">
-                    </fieldset>
-                </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">IMEI / Serial Number</label>
+                <input class="w-full border-gray-300 rounded p-2 text-sm focus:ring-0 focus:border-primary-container" 
+                    id="input-item-imei-${item.id}" 
+                    placeholder="Enter 15-digit IMEI or Serial Number (Optional)" 
+                    type="text" 
+                    value="${escapeHtml(item.imei)}"
+                    oninput="onItemFieldChange(${item.id}, 'imei', this.value)">
             </div>
         </div>
     `).join("");
@@ -761,46 +747,6 @@ function renderLineItemRows() {
         setupRowAutocomplete(item.id);
     });
 }
-
-window.onTransactionModeChange = function(mode) {
-    const directSec = document.getElementById("paySubDirect");
-    const financeSec = document.getElementById("paySubFinance");
-    const bannerTitle = document.getElementById("paymentModeBannerTitle");
-
-    if (mode === "finance") {
-        if (directSec) directSec.classList.add("hidden");
-        if (financeSec) financeSec.classList.remove("hidden");
-        if (bannerTitle) bannerTitle.textContent = "Finance Payment Mode";
-        selectPaymentType("finance");
-    } else {
-        if (directSec) directSec.classList.remove("hidden");
-        if (financeSec) financeSec.classList.add("hidden");
-        if (bannerTitle) bannerTitle.textContent = "Direct Settlement Mode";
-        selectPaymentType("non-finance");
-    }
-};
-
-window.applyItemSuggestion = function(val, itemId) {
-    if (!val) return;
-    const item = itemsList.find(i => i.id === itemId);
-    if (!item) return;
-    const parts = val.split("|");
-    const name = parts[0] || "";
-    const price = parseFloat(parts[1]) || 0;
-    const hsn = parts[2] || "8517";
-
-    item.desc = name;
-    item.price = price;
-    item.hsn = hsn;
-
-    const descInput = document.getElementById(`input-item-desc-${itemId}`);
-    const priceInput = document.getElementById(`input-item-price-${itemId}`);
-    if (descInput) descInput.value = name;
-    if (priceInput) priceInput.value = price > 0 ? price : "";
-
-    calculateTotals();
-    updateInvoicePreview();
-};
 
 function addNewItemRow(preset = null) {
     const newItem = preset || {
@@ -1006,7 +952,6 @@ function updateInvoicePreview() {
     safeSetText("summary-taxable", `₹${taxableTotal.toFixed(2)}`);
     safeSetText("summary-gst", `₹${cgst.toFixed(2)} + ₹${sgst.toFixed(2)}`);
     safeSetText("summary-total", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
-    safeSetText("summary-total-calc", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
 
     // Update Right A4 Summary Sheet (Supports both ID variations)
     safeSetText("preview-subtotal-val", `₹${subtotal.toFixed(2)}`);

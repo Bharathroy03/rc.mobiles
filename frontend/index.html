@@ -284,36 +284,28 @@
 <!-- Main Layout Workspace -->
 <main class="flex-1 min-h-0 flex flex-col h-full h-[100dvh] ml-0 md:ml-64 w-full bg-surface-container">
 <!-- Top App Bar -->
-<!-- Top App Bar with Retail POS Banner -->
-<div class="no-print bg-[#b9e6fe] text-[#0f172a] text-center font-black text-xs sm:text-sm py-1.5 tracking-widest uppercase border-b border-[#7dd3fc] shadow-sm">
-  RETAIL POS
+<header class="no-print flex justify-between items-center h-16 px-4 sm:px-6 w-full bg-surface border-b border-gray-200 shadow-sm z-30 shrink-0">
+<div class="flex items-center gap-3">
+<button onclick="toggleMobileDrawer()" class="md:hidden p-2 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors" title="Toggle Navigation Menu">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+<h2 class="text-base sm:text-lg font-extrabold text-gray-900 leading-tight">Create Invoice</h2>
 </div>
-
-<header class="no-print flex justify-between items-center h-14 px-4 sm:px-6 w-full bg-white border-b border-gray-200 shadow-sm z-30 shrink-0">
-  <div class="flex items-center gap-3">
-    <button onclick="toggleMobileDrawer()" class="md:hidden p-1.5 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors" title="Toggle Navigation Menu">
-      <span class="material-symbols-outlined text-2xl">menu</span>
-    </button>
-    <div class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-lg text-slate-700">arrow_back</span>
-      <h2 class="text-base sm:text-lg font-extrabold text-gray-900 leading-tight">New Invoice</h2>
-    </div>
-  </div>
-  <div class="flex items-center gap-3">
-    <div class="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-1.5 border border-gray-200">
-      <span class="material-symbols-outlined text-[18px] text-gray-500 mr-2">storefront</span>
-      <span id="topStoreName" class="text-xs font-semibold text-gray-800">RC Mobiles - Madakasira</span>
-    </div>
-    <button onclick="openModal('dashboardModal')" class="p-2 text-gray-600 rounded-full hover:bg-gray-100 transition-colors" title="Notifications & Stats">
-      <span class="material-symbols-outlined">notifications</span>
-    </button>
-  </div>
+<div class="flex items-center gap-3">
+<div class="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-1.5 border border-gray-200">
+<span class="material-symbols-outlined text-[18px] text-gray-500 mr-2">storefront</span>
+<span id="topStoreName" class="text-xs font-semibold text-gray-800">RC Mobiles - Madakasira</span>
+</div>
+<button onclick="openModal('dashboardModal')" class="p-2 text-gray-600 rounded-full hover:bg-gray-100 transition-colors" title="Notifications & Stats">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
 </header>
 
 <!-- Mobile View Switcher (POS Billing Form vs Live A4 Preview) -->
 <div id="mobileWorkspaceSwitcher" class="no-print md:hidden flex items-center bg-slate-200/90 p-1 rounded-xl mx-4 my-2 shrink-0 border border-slate-300 shadow-sm">
   <button id="mobTabFormBtn" onclick="switchMobileWorkspace('form')" class="flex-1 py-2 rounded-lg text-xs font-black transition-all bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5">
-    <span class="material-symbols-outlined text-base text-[#0284c7]">edit_note</span> POS Billing Form
+    <span class="material-symbols-outlined text-base text-primary-container">edit_note</span> POS Billing Form
   </button>
   <button id="mobTabPreviewBtn" onclick="switchMobileWorkspace('preview')" class="flex-1 py-2 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
     <span class="material-symbols-outlined text-base">receipt_long</span> A4 Invoice Preview
@@ -323,72 +315,74 @@
 <!-- Two Column Layout Area -->
 <div class="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden relative">
 <!-- LEFT PANEL: Input Form -->
-<section id="posFormSection" class="no-print w-full md:w-1/2 flex flex-col h-full min-h-0 bg-slate-100/70 relative z-10 border-r border-gray-200 shadow-sm">
-<div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-3 sm:p-5 space-y-4 pb-36 md:pb-6">
+<section id="posFormSection" class="no-print w-full md:w-1/2 flex flex-col h-full min-h-0 bg-surface relative z-10 border-r border-gray-200 shadow-sm">
+<div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-3.5 sm:p-6 space-y-5 pb-36 md:pb-6">
 
-<!-- 1. INVOICE & CUSTOMER DETAILS CARD -->
-<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" id="customerDetailsCard">
-  <!-- Sky-Blue Banner Header -->
-  <div class="pos-card-header">
-    <span class="material-symbols-outlined text-lg">description</span>
-    <span>Invoice Details</span>
-    <span id="invoiceStatusBadge" class="ml-auto bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider">Draft</span>
+<!-- 1. TRANSACTION MODE CARD (NON-FINANCE VS FINANCE) -->
+<div class="bg-white rounded-xl p-4 sm:p-5 border border-gray-200 shadow-sm space-y-3">
+  <div class="flex justify-between items-center border-b pb-2">
+    <div>
+      <h3 class="text-primary-container font-extrabold uppercase tracking-wider text-xs flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">swap_horiz</span> 1. Transaction Mode
+      </h3>
+      <p class="text-[10px] text-gray-500 font-medium mt-0.5">Select billing &amp; payment category</p>
+    </div>
+    <span id="invoiceStatusBadge" class="bg-orange-100 text-orange-800 px-3 py-1 rounded text-xs font-bold uppercase tracking-widest">Draft</span>
   </div>
 
-  <div class="p-4 space-y-3">
-    <!-- Transaction Mode Fieldset -->
-    <fieldset class="pos-fieldset">
-      <legend>Transaction Mode</legend>
-      <select id="posTransactionModeSelect" onchange="onTransactionModeChange(this.value)" class="cursor-pointer">
-        <option value="direct">Direct (Cash / Card / UPI)</option>
-        <option value="finance">Finance</option>
-      </select>
-    </fieldset>
-
-    <!-- Hidden native invoice No, Date, Time (Kept accessible for auto-generation) -->
-    <input type="hidden" id="input-invoice-no" value="">
-    <input type="hidden" id="input-date-picker" value="">
-    <input type="hidden" id="input-time-picker" value="">
-
-    <!-- Customer Subheader -->
-    <div class="flex items-center gap-1.5 text-xs font-bold text-slate-800 pt-1">
-      <span class="material-symbols-outlined text-base text-slate-700">person</span>
-      <span>Customer Details</span>
-      <span class="text-[11px] text-red-500 font-normal">(All Fields Mandatory)</span>
-    </div>
-
-    <!-- 2-Column Row for Customer Name & Mobile -->
-    <div class="grid grid-cols-2 gap-2.5">
-      <div>
-        <fieldset class="pos-fieldset" id="fs-customer-name">
-          <legend>Customer Name</legend>
-          <input class="w-full" id="input-customer-name" placeholder="Customer Name" type="text" value="" oninput="clearFieldError(this)">
-        </fieldset>
-        <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-name">Customer name is required</p>
+  <div class="grid grid-cols-2 gap-2.5 pt-1">
+    <button type="button" id="payTypeBtnDirect" onclick="selectPaymentType('non-finance')" class="py-3 px-3 rounded-xl font-black text-xs border border-primary-container bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-sm">
+      <span class="material-symbols-outlined text-lg">payments</span>
+      <div class="text-left">
+        <div class="leading-tight">Non-Finance</div>
+        <div class="text-[9px] font-normal opacity-80">Direct Cash / Card / UPI</div>
       </div>
-
-      <div>
-        <fieldset class="pos-fieldset" id="fs-customer-mobile">
-          <legend>Mobile Number</legend>
-          <input class="w-full" id="input-customer-mobile" placeholder="Mobile Number" type="text" maxlength="15" value="" oninput="clearFieldError(this)">
-        </fieldset>
-        <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-mobile">Valid mobile required</p>
+    </button>
+    <button type="button" id="payTypeBtnFinance" onclick="selectPaymentType('finance')" class="py-3 px-3 rounded-xl font-bold text-xs border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined text-lg text-blue-800">credit_score</span>
+      <div class="text-left">
+        <div class="leading-tight">Finance Payment</div>
+        <div class="text-[9px] font-normal text-gray-500">Bajaj / TVS / Home Credit</div>
       </div>
-    </div>
+    </button>
+  </div>
+</div>
 
-    <!-- Address Row -->
+<!-- 2. CUSTOMER DETAILS CARD (ALL FIELDS MANDATORY) -->
+<div class="bg-white rounded-xl p-4 sm:p-5 border border-gray-200 shadow-sm" id="customerDetailsCard">
+  <div class="flex justify-between items-start mb-3">
     <div>
-      <fieldset class="pos-fieldset" id="fs-customer-address">
-        <legend>Address</legend>
-        <input class="w-full" id="input-customer-address" placeholder="Address" type="text" value="" oninput="clearFieldError(this)">
-      </fieldset>
-      <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-address">Address is required</p>
+      <h3 class="text-primary-container font-extrabold uppercase tracking-wider text-xs flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">person</span> 2. Customer Details
+      </h3>
+      <p class="text-[10px] text-red-500 font-semibold mt-0.5">* All fields are mandatory</p>
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <div class="w-full">
+      <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Customer Name <span class="text-red-500">*</span></label>
+      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-name" placeholder="Enter Customer Name" type="text" value="" oninput="clearFieldError(this)">
+      <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-name">Customer name is required</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div>
+        <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Mobile Number <span class="text-red-500">*</span></label>
+        <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-mobile" placeholder="10-digit number" type="tel" maxlength="15" value="" oninput="clearFieldError(this)">
+        <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-mobile">Valid mobile number required</p>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Customer Address <span class="text-red-500">*</span></label>
+        <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none transition-colors font-semibold" id="input-customer-address" placeholder="Enter Customer Address / Town" type="text" value="" oninput="clearFieldError(this)">
+        <p class="field-error text-[10px] text-red-500 font-semibold mt-0.5 hidden" id="err-customer-address">Address is required</p>
+      </div>
     </div>
 
     <!-- Customer Verification Button -->
-    <div class="pt-0.5">
+    <div class="pt-1">
       <button type="button" id="btnCustomerVerify" onclick="toggleCustomerVerification()"
-        class="w-full flex items-center justify-center gap-2 py-2 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 text-xs font-bold transition-all hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50"
+        class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border-2 border-dashed border-gray-300 text-gray-500 text-xs font-bold transition-all hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50"
         title="Click to verify customer details before billing">
         <span class="material-symbols-outlined text-base" id="verifyIcon">check_circle</span>
         <span id="verifyLabel">Click to Verify Customer ✓</span>
@@ -398,188 +392,219 @@
   </div>
 </div>
 
-<!-- 2. ITEM DETAILS (IMEI OPTIONAL) CARD -->
-<div id="sectionTabItems" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-  <!-- Sky-Blue Banner Header -->
-  <div class="pos-card-header">
-    <span class="material-symbols-outlined text-lg">shopping_bag</span>
-    <span>Item Details (IMEI Optional)</span>
-  </div>
-
-  <div class="p-4 space-y-3">
-    <!-- Container for Dynamic Item Input Rows -->
-    <div id="lineItemsContainer" class="space-y-3">
-      <!-- Dynamic Item Rows Rendered via app.js with Floating Fieldsets -->
+<!-- 3. INVOICE DETAILS CARD (DATE & TIME) -->
+<div class="bg-white rounded-xl p-4 sm:p-5 border border-gray-200 shadow-sm">
+  <h3 class="text-primary-container font-extrabold uppercase tracking-wider text-xs mb-3 flex items-center gap-1.5">
+    <span class="material-symbols-outlined text-base">receipt</span> 3. Invoice Details
+  </h3>
+  <div class="grid grid-cols-12 gap-3">
+    <div class="col-span-12 sm:col-span-5">
+      <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Invoice No</label>
+      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-bold focus:ring-2 focus:ring-primary-container focus:outline-none text-blue-900 bg-slate-50" id="input-invoice-no" placeholder="RCM-202608-1005" type="text" value="">
     </div>
+    <div class="col-span-6 sm:col-span-4">
+      <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Select Date</label>
+      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary-container focus:outline-none cursor-pointer" id="input-date-picker" type="date">
+    </div>
+    <div class="col-span-6 sm:col-span-3">
+      <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Time</label>
+      <input class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary-container focus:outline-none cursor-pointer" id="input-time-picker" type="time">
+    </div>
+  </div>
+</div>
 
-    <!-- Full-Width + ADD ITEM Blue Button matching mockup -->
-    <button type="button" id="btnAddItemToList" class="w-full bg-[#0284c7] hover:bg-[#0369a1] active:scale-[0.99] text-white py-2.5 px-4 rounded-xl font-black text-xs tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-1.5">
-      <span class="material-symbols-outlined text-base font-black">add</span>
-      <span>+ ADD ITEM</span>
+<!-- 4. ITEM / MODEL CART SECTION (NAME, QTY, PRICE MANDATORY; IMEI OPTIONAL) -->
+<div id="sectionTabItems" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col p-4 sm:p-5 space-y-4">
+  <div class="flex justify-between items-center border-b pb-3">
+    <div>
+      <h3 class="text-primary-container font-extrabold uppercase tracking-wider text-xs flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">smartphone</span> 4. Item / Model Cart
+      </h3>
+      <p class="text-[10px] text-gray-500 font-medium mt-0.5">Item, Qty, and Price are mandatory. IMEI is optional.</p>
+    </div>
+    <button type="button" id="btnAddItemToList" class="bg-primary-container text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1 uppercase tracking-wider hover:bg-slate-900 transition-all shadow-sm">
+      <span class="material-symbols-outlined text-sm">add</span> Add Item
     </button>
   </div>
-</div>
 
-<!-- 3. PAYMENT DETAILS CARD -->
-<div id="sectionTabPayment" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-  <!-- Sky-Blue Banner Header -->
-  <div class="pos-card-header">
-    <span class="material-symbols-outlined text-lg">credit_card</span>
-    <span>Payment Details</span>
-  </div>
-
-  <div class="p-4 space-y-3">
-    <!-- Sub-header for Mode -->
-    <div class="font-black text-slate-800 text-xs tracking-tight" id="paymentModeBannerTitle">
-      Direct Settlement Mode
-    </div>
-
-    <!-- SUB-SECTION A: DIRECT PAYMENT (CASH / CARD / UPI) -->
-    <div id="paySubDirect" class="space-y-3">
-      <div class="grid grid-cols-3 gap-2">
-        <fieldset class="pos-fieldset">
-          <legend>Cash (₹)</legend>
-          <input id="pay-cash-amount" type="number" step="0.01" class="text-right" placeholder="0.00" value="">
-        </fieldset>
-        <fieldset class="pos-fieldset">
-          <legend>Card (₹)</legend>
-          <input id="pay-card-amount" type="number" step="0.01" class="text-right" placeholder="0.00" value="">
-        </fieldset>
-        <fieldset class="pos-fieldset">
-          <legend>UPI (₹)</legend>
-          <input id="pay-upi-amount" type="number" step="0.01" class="text-right" placeholder="0.00" value="">
-        </fieldset>
-      </div>
-
-      <div class="flex justify-end">
-        <button type="button" onclick="autoFillFullCash()" class="text-[#0284c7] hover:underline text-[11px] font-bold">
-          ⚡ Auto-fill Full Cash
-        </button>
-      </div>
-
-      <!-- Real-time Settlement & Balance Box -->
-      <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs">
-        <div class="flex justify-between items-center text-slate-600">
-          <span>Invoice Grand Total:</span>
-          <span id="pay-calc-grand-total" class="font-extrabold text-slate-900">₹0.00</span>
-        </div>
-        <div class="flex justify-between items-center text-slate-600">
-          <span>Total Payment Received:</span>
-          <span id="pay-received-total" class="font-bold text-slate-900">₹0.00</span>
-        </div>
-        <div class="flex justify-between items-center border-t border-slate-200 pt-1.5 font-bold">
-          <span id="pay-balance-label" class="text-slate-700">Balance Due / Pending:</span>
-          <span id="pay-balance-amount" class="text-sm font-extrabold text-red-600">₹0.00</span>
-        </div>
-        <div id="pay-status-badge" class="hidden text-xs font-extrabold p-2 rounded-lg text-center mt-1"></div>
-      </div>
-    </div>
-
-    <!-- SUB-SECTION B: FINANCE DETAILS -->
-    <div id="paySubFinance" class="hidden space-y-3">
-      <div class="grid grid-cols-2 gap-2.5">
-        <fieldset class="pos-fieldset">
-          <legend>Financer Name</legend>
-          <input id="pay-financer-name" type="text" value="Bajaj Finance" placeholder="Bajaj Finance">
-        </fieldset>
-
-        <fieldset class="pos-fieldset">
-          <legend>Approval Number</legend>
-          <input id="pay-finance-approval" type="text" placeholder="Approval Number" oninput="this.classList.remove('field-invalid')">
-        </fieldset>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5">
-        <fieldset class="pos-fieldset">
-          <legend>Downpayment Amount</legend>
-          <input id="pay-finance-dp" type="number" step="0.01" class="text-right" placeholder="0.00" oninput="this.classList.remove('field-invalid')">
-        </fieldset>
-
-        <fieldset class="pos-fieldset">
-          <legend>Scheme</legend>
-          <input id="pay-finance-scheme" type="text" placeholder="6 Months EMI" oninput="this.classList.remove('field-invalid')">
-        </fieldset>
-      </div>
-
-      <input type="hidden" id="pay-finance-dp-mode" value="Cash">
-
-      <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 select-none pt-1">
-        <input type="checkbox" id="payDownpaymentReceived" checked class="rounded text-[#0284c7] focus:ring-[#0284c7] w-4 h-4">
-        <span>Downpayment Received</span>
-      </label>
-
-      <!-- Real-time Finance Calculator -->
-      <div class="p-3 rounded-xl bg-blue-50/60 border border-blue-200 space-y-1.5 text-xs">
-        <div class="flex justify-between items-center text-slate-600">
-          <span>Invoice Grand Total:</span>
-          <span id="pay-fin-grand-total" class="font-bold text-slate-900">₹0.00</span>
-        </div>
-        <div class="flex justify-between items-center text-slate-600">
-          <span>Downpayment Paid:</span>
-          <span id="pay-fin-dp-val" class="font-bold text-slate-900">₹0.00</span>
-        </div>
-        <div class="flex justify-between items-center border-t border-blue-200 pt-1.5 font-extrabold text-blue-900 text-sm">
-          <span>Financed Loan Amount:</span>
-          <span id="pay-fin-loan-val">₹0.00</span>
-        </div>
-      </div>
-    </div>
+  <!-- Container for Dynamic Item Input Rows -->
+  <div id="lineItemsContainer" class="space-y-4">
+    <!-- Dynamic Item Rows Rendered via app.js -->
   </div>
 </div>
 
-<!-- 4. PAYMENT SUMMARY CARD -->
-<div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2.5">
-  <div class="flex justify-between items-center border-b pb-2">
-    <span class="font-black text-xs text-slate-800 uppercase tracking-wide">Payment Summary</span>
-    <span class="text-[10px] text-slate-500 font-normal uppercase">GST 18% Inclusive</span>
+<!-- 5. PAYMENT MODES & SETTLEMENT SECTION -->
+<div id="sectionTabPayment" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 sm:p-5 space-y-4">
+  <div class="border-b pb-2 flex justify-between items-center">
+    <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
+      <span class="material-symbols-outlined text-base text-primary-container">payments</span> 5. Payment Modes &amp; Settlement
+    </h3>
+    <span class="text-[10px] text-gray-500 font-semibold uppercase" id="currentModeLabel">Direct Payment</span>
   </div>
-  <div class="space-y-1.5 text-xs">
-    <div class="flex justify-between text-slate-600">
+
+  <!-- OPTION A: NON-FINANCE DIRECT PAYMENT (CASH / CARD / UPI) -->
+  <div id="paySubDirect" class="space-y-4">
+    <div class="flex justify-between items-center text-xs font-bold text-gray-700 border-b pb-1">
+      <span>Payment Received Breakdown</span>
+      <button type="button" onclick="autoFillFullCash()" class="text-primary-container hover:underline text-[11px] font-extrabold uppercase tracking-wider">
+        ⚡ Auto-fill Full Cash
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div>
+        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Cash (₹)</label>
+        <input id="pay-cash-amount" type="number" step="0.01" class="w-full border-gray-300 rounded-lg p-2.5 text-sm text-right font-bold focus:ring-2 focus:ring-primary-container focus:outline-none" placeholder="0.00" value="">
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Card (₹)</label>
+        <input id="pay-card-amount" type="number" step="0.01" class="w-full border-gray-300 rounded-lg p-2.5 text-sm text-right font-bold focus:ring-2 focus:ring-primary-container focus:outline-none" placeholder="0.00" value="">
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">E-Wallet / UPI (₹)</label>
+        <input id="pay-upi-amount" type="number" step="0.01" class="w-full border-gray-300 rounded-lg p-2.5 text-sm text-right font-bold focus:ring-2 focus:ring-primary-container focus:outline-none" placeholder="0.00" value="">
+      </div>
+    </div>
+
+    <!-- Real-time Settlement & Balance Box -->
+    <div class="p-3.5 rounded-xl bg-slate-50 border border-gray-200 space-y-2 text-xs">
+      <div class="flex justify-between items-center text-gray-700">
+        <span>Invoice Grand Total:</span>
+        <span id="pay-calc-grand-total" class="font-extrabold text-gray-900 text-sm">₹0.00</span>
+      </div>
+      <div class="flex justify-between items-center text-gray-700">
+        <span>Total Payment Received:</span>
+        <span id="pay-received-total" class="font-bold text-gray-900">₹0.00</span>
+      </div>
+      <div class="flex justify-between items-center border-t border-gray-200 pt-2 font-bold">
+        <span id="pay-balance-label" class="text-gray-700">Balance Due / Pending:</span>
+        <span id="pay-balance-amount" class="text-sm font-extrabold text-red-600">₹0.00</span>
+      </div>
+      <div id="pay-status-badge" class="hidden text-xs font-extrabold p-2 rounded-lg text-center mt-1"></div>
+    </div>
+  </div>
+
+  <!-- OPTION B: FINANCE DETAILS (DIRECTLY SHIFTED WHEN FINANCE SELECTED, ALL FIELDS MANDATORY) -->
+  <div id="paySubFinance" class="hidden space-y-4 p-4 rounded-xl border border-blue-200 bg-blue-50/40">
+    <div class="text-xs font-bold text-blue-900 border-b border-blue-200 pb-2 flex items-center gap-1.5">
+      <span class="material-symbols-outlined text-base">credit_score</span> Option B: Finance Loan &amp; Downpayment Details
+      <span class="ml-auto text-[10px] text-red-500 font-semibold">* All fields mandatory</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div>
+        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Financer Name <span class="text-red-500">*</span></label>
+        <select id="pay-financer-name" class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary-container focus:outline-none bg-white">
+          <option value="Bajaj Finserv">Bajaj Finserv</option>
+          <option value="TVS Credit">TVS Credit</option>
+          <option value="Home Credit">Home Credit</option>
+          <option value="HDB Financial">HDB Financial Services</option>
+          <option value="Samsung Finance+">Samsung Finance+</option>
+          <option value="IDFC First Bank">IDFC First Bank</option>
+          <option value="HDFC Bank Finance">HDFC Bank Finance</option>
+          <option value="Other">Other Financer</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Approval / Loan Acc No <span class="text-red-500">*</span></label>
+        <input id="pay-finance-approval" type="text" class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-bold focus:ring-2 focus:ring-primary-container focus:outline-none bg-white" placeholder="Enter Approval / Loan Acc No" oninput="this.classList.remove('field-invalid')">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div>
+        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Downpayment Amount (₹) <span class="text-red-500">*</span></label>
+        <input id="pay-finance-dp" type="number" step="0.01" class="w-full border-gray-300 rounded-lg p-2.5 text-sm text-right font-bold focus:ring-2 focus:ring-primary-container focus:outline-none bg-white" placeholder="0.00" oninput="this.classList.remove('field-invalid')">
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Downpayment Received Mode <span class="text-red-500">*</span></label>
+        <select id="pay-finance-dp-mode" class="w-full border-gray-300 rounded-lg p-2.5 text-sm font-medium focus:ring-2 focus:ring-primary-container focus:outline-none bg-white">
+          <option value="Cash">Cash</option>
+          <option value="Card">Card</option>
+          <option value="E-Wallet">E-Wallet / UPI</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Finance Scheme / EMI Details <span class="text-red-500">*</span></label>
+      <input id="pay-finance-scheme" type="text" class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none bg-white font-medium" placeholder="Enter Finance Scheme / EMI Details" oninput="this.classList.remove('field-invalid')">
+    </div>
+
+    <!-- Real-time Finance Calculator -->
+    <div class="p-3.5 rounded-xl bg-white border border-blue-200 space-y-2 text-xs">
+      <div class="flex justify-between items-center text-gray-700">
+        <span>Invoice Grand Total:</span>
+        <span id="pay-fin-grand-total" class="font-bold text-gray-900">₹0.00</span>
+      </div>
+      <div class="flex justify-between items-center text-gray-700">
+        <span>Downpayment Paid:</span>
+        <span id="pay-fin-dp-val" class="font-bold text-gray-900">₹0.00</span>
+      </div>
+      <div class="flex justify-between items-center border-t border-blue-200 pt-2 font-extrabold text-blue-900 text-sm">
+        <span>Financed Loan Amount:</span>
+        <span id="pay-fin-loan-val">₹0.00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. PAYMENT SUMMARY CARD -->
+<div class="bg-white rounded-xl p-4 sm:p-5 border border-gray-200 shadow-sm space-y-3">
+  <h3 class="text-primary-container font-extrabold uppercase tracking-wider text-xs border-b pb-2 flex justify-between items-center">
+    <span>6. Payment Summary</span>
+    <span class="text-[10px] text-gray-500 font-normal uppercase">GST 18% Inclusive</span>
+  </h3>
+  <div class="space-y-2 text-sm">
+    <div class="flex justify-between text-gray-700">
       <span>Subtotal (Gross):</span>
-      <span class="font-bold text-slate-900" id="summary-subtotal">₹0.00</span>
+      <span class="font-bold text-gray-900" id="summary-subtotal">₹0.00</span>
     </div>
-    <div class="flex justify-between items-center text-slate-600">
+    <div class="flex justify-between items-center text-gray-700">
       <span>Discount (₹):</span>
-      <input class="w-24 p-1 text-right rounded border-slate-300 h-7 text-red-600 font-bold focus:ring-0 focus:border-[#0284c7]" id="input-discount" type="number" step="0.01" value="0.00" placeholder="0.00">
+      <input class="w-28 p-1 text-right rounded border-gray-300 h-8 text-red-600 font-bold focus:ring-0 focus:border-primary-container" id="input-discount" type="number" step="0.01" value="0.00" placeholder="0.00">
     </div>
-    <div class="flex justify-between text-slate-500 text-[11px]">
+    <div class="flex justify-between text-gray-500 text-xs">
       <span>Taxable Amount:</span>
       <span id="summary-taxable">₹0.00</span>
     </div>
-    <div class="flex justify-between text-slate-500 text-[11px]">
+    <div class="flex justify-between text-gray-500 text-xs">
       <span>CGST (9%) + SGST (9%):</span>
       <span id="summary-gst">₹0.00</span>
     </div>
-    <div class="flex justify-between border-t border-slate-200 pt-2 font-black text-sm text-slate-900">
-      <span>Grand Total:</span>
-      <span class="text-base text-[#0284c7]" id="summary-total-calc">₹0.00</span>
+    <div class="flex justify-between border-t-2 border-primary-container pt-2.5 text-base font-extrabold text-gray-900 bg-slate-50 p-2.5 rounded-lg mt-2 shadow-sm">
+      <span class="uppercase tracking-wider text-xs my-auto">Grand Total:</span>
+      <span class="text-lg text-primary-container" id="summary-total">₹0.00</span>
     </div>
   </div>
 </div>
 
 </div>
 
-<!-- STICKY BOTTOM SUMMARY BAR & ACTION BUTTONS (Matching Retail POS Mockup) -->
-<div class="sticky bottom-0 left-0 w-full bg-white/98 backdrop-blur-md border-t border-slate-200 px-4 py-3 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] z-40 space-y-2.5 shrink-0">
-  <div class="flex items-center justify-between">
-    <div class="text-slate-900 font-black text-sm sm:text-base tracking-tight">
-      TOTAL: <span id="summary-total" class="text-slate-900 text-lg sm:text-xl font-extrabold">₹0.00</span>
-    </div>
-    <span class="text-[10px] text-slate-500 font-medium">*All mandatory fields required before confirmation.</span>
-  </div>
-  <div class="grid grid-cols-12 gap-2">
-    <button type="button" id="btnGenerateInvoice" class="col-span-6 bg-[#0284c7] hover:bg-[#0369a1] active:scale-[0.98] text-white py-2.5 px-3 rounded-full font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
-      <span class="material-symbols-outlined text-base">verified</span> <span>VERIFY &amp; CONFIRM</span>
-    </button>
-    <button type="button" id="btnClearForm" class="col-span-3 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 active:scale-[0.98] py-2.5 px-2 rounded-full font-bold text-xs uppercase transition-all shadow-sm flex items-center justify-center whitespace-nowrap">
-      <span>RESET</span>
-    </button>
-    <button type="button" id="btnPrintInvoice" class="col-span-3 bg-[#bae6fd] hover:bg-[#7dd3fc] text-[#0369a1] active:scale-[0.98] py-2.5 px-2 rounded-full font-black text-xs uppercase transition-all shadow-sm flex items-center justify-center gap-1 whitespace-nowrap" title="Print Live A4 Invoice">
-      <span class="material-symbols-outlined text-sm">print</span> <span>PRINT</span>
+<!-- DESKTOP Action Bar (Untouched, Desktop Only) -->
+<div id="posFormActionBar" class="hidden md:flex w-full bg-white border-t border-slate-200 px-4 sm:px-6 py-3 shadow-lg z-20 items-center justify-between gap-3 shrink-0">
+  <button type="button" id="btnClearForm" class="text-slate-600 hover:text-slate-900 font-bold text-xs px-3 sm:px-4 py-2 transition-colors shrink-0">Clear / Reset Form</button>
+  <div class="flex items-center gap-2 shrink-0">
+    <button type="button" id="btnSaveDraft" class="border border-primary-container text-primary-container hover:bg-blue-50 font-bold rounded-xl text-xs px-3 sm:px-5 py-2.5 transition-colors shrink-0 whitespace-nowrap">Save Draft</button>
+    <button type="button" id="btnGenerateInvoice" class="bg-primary-container text-white hover:bg-slate-900 font-extrabold rounded-xl text-xs px-3.5 sm:px-6 py-2.5 shadow-md transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+      <span class="material-symbols-outlined text-base">receipt_long</span> <span>Generate &amp; Print</span>
     </button>
   </div>
 </div>
 </section>
+
+<!-- FLOATING ACTION BUTTON (Mobile View Only - Left Side Floating Pill) -->
+<div id="mobileFloatingActions" class="no-print md:hidden fixed bottom-20 left-3 z-30 flex items-center gap-1.5 bg-slate-900/95 backdrop-blur-md p-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.25)] border border-slate-700/80 transition-all duration-200">
+  <button type="button" id="btnClearFormMob" onclick="resetForm()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition-transform active:scale-90" title="Reset Form">
+    <span class="material-symbols-outlined text-base">restart_alt</span>
+  </button>
+  <button type="button" id="btnSaveDraftMob" onclick="saveInvoice(false)" class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] px-3 py-1.5 rounded-full shadow transition-transform active:scale-95 whitespace-nowrap">
+    <span class="material-symbols-outlined text-sm">save</span> <span>Save Draft</span>
+  </button>
+  <button type="button" id="btnGenerateInvoiceMob" onclick="saveInvoice(true)" class="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] px-3 py-1.5 rounded-full shadow-lg transition-transform active:scale-95 whitespace-nowrap">
+    <span class="material-symbols-outlined text-sm">receipt_long</span> <span>Generate &amp; Print</span>
+  </button>
+</div>
 
 <!-- RIGHT PANEL: Live Invoice Preview -->
 <section id="invoicePreviewSection" class="hidden md:flex w-full md:w-1/2 bg-slate-200 h-full min-h-0 flex-col relative pb-20 md:pb-0">
