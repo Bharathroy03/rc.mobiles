@@ -315,12 +315,13 @@ def get_settings():
         st = st_res.data[0] if (st_res.data and len(st_res.data) > 0) else {}
 
         # Fetch max invoice counter from existing invoices to prevent duplicate keys
-        inv_res = supabase.table("invoices").select("invoice_number").execute()
+        inv_res = supabase.table("invoices").select("invoice_number").order("id", desc=True).limit(500).execute()
         existing_numbers = [inv["invoice_number"] for inv in (inv_res.data or []) if inv.get("invoice_number")]
         max_counter = 1000
         for num in existing_numbers:
-            parts = num.split("-")
-            if len(parts) >= 3 and parts[-1].isdigit():
+            clean_num = (num or "").replace("/", "-")
+            parts = clean_num.split("-")
+            if len(parts) >= 1 and parts[-1].isdigit():
                 val = int(parts[-1])
                 if val > max_counter:
                     max_counter = val
@@ -336,13 +337,14 @@ def get_settings():
                 "email": "rcmobiles.madakasira@gmail.com",
                 "terms": "1. Goods once sold will not be taken back or exchanged without valid invoice.\n2. Warranty claims are governed strictly by original manufacturer policy.\n3. Physical damage, liquid damage & unauthorized repairs void warranty.\n4. Subject to Madakasira Jurisdiction.",
                 "logo_path": "/api/uploads/logo.png",
-                "invoice_prefix": "RCM",
+                "invoice_prefix": "SI/RCM/2627",
                 "invoice_counter": real_next
             }
             res_ins = supabase.table("store_settings").insert(default_s).execute()
             return jsonify(res_ins.data[0] if res_ins.data else default_s)
 
         st["invoice_counter"] = real_next
+        st["invoice_prefix"] = "SI/RCM/2627"
         # Alias: frontend uses both logo_url and logo_path
         if "logo_path" in st and "logo_url" not in st:
             st["logo_url"] = st["logo_path"]
@@ -994,17 +996,16 @@ def create_invoice():
     st_res = supabase.table("store_settings").select("*").limit(1).execute()
     st_data = st_res.data[0] if st_res.data else {}
     
-    prefix = st_data.get("invoice_prefix") or "RCM"
-    yyyymm = datetime.utcnow().strftime("%Y%m")
+    inv_format_prefix = "SI/RCM/2627"
 
     # Fetch existing invoice numbers to prevent duplicate key errors (23505)
     max_counter = 1000
     try:
         all_invs = supabase.table("invoices").select("invoice_number").order("id", desc=True).limit(500).execute()
         for inv in (all_invs.data or []):
-            num = inv.get("invoice_number") or ""
+            num = (inv.get("invoice_number") or "").replace("/", "-")
             parts = num.split("-")
-            if len(parts) >= 3 and parts[-1].isdigit():
+            if len(parts) >= 1 and parts[-1].isdigit():
                 val = int(parts[-1])
                 if val > max_counter:
                     max_counter = val
@@ -1020,14 +1021,13 @@ def create_invoice():
         try:
             chk_req = supabase.table("invoices").select("id").eq("invoice_number", req_number).execute()
             if chk_req.data and len(chk_req.data) > 0:
-                # Already exists, fallback to guaranteed unique candidate
-                inv_number = f"{prefix}-{yyyymm}-{candidate_counter}"
+                inv_number = f"{inv_format_prefix}/{candidate_counter}"
             else:
                 inv_number = req_number
         except Exception:
-            inv_number = f"{prefix}-{yyyymm}-{candidate_counter}"
+            inv_number = f"{inv_format_prefix}/{candidate_counter}"
     else:
-        inv_number = f"{prefix}-{yyyymm}-{candidate_counter}"
+        inv_number = f"{inv_format_prefix}/{candidate_counter}"
 
     # Calculations
     subtotal = 0.0
@@ -1103,7 +1103,7 @@ def create_invoice():
             err_str = str(err).lower()
             if "23505" in err_str or "duplicate key" in err_str or "unique constraint" in err_str:
                 retry_counter += 1
-                inv_payload["invoice_number"] = f"{prefix}-{yyyymm}-{retry_counter}"
+                inv_payload["invoice_number"] = f"{inv_format_prefix}/{retry_counter}"
                 print(f"Duplicate invoice number resolved. Retrying with: {inv_payload['invoice_number']}")
             else:
                 raise err
@@ -1127,11 +1127,11 @@ def create_invoice():
     # Update store settings with future_next_counter
     try:
         if st_data.get("id"):
-            supabase.table("store_settings").update({"invoice_counter": future_next_counter}).eq("id", st_data["id"]).execute()
+            supabase.table("store_settings").update({"invoice_counter": future_next_counter, "invoice_prefix": inv_format_prefix}).eq("id", st_data["id"]).execute()
     except Exception:
         pass
 
-    next_invoice_number = f"{prefix}-{yyyymm}-{future_next_counter}"
+    next_invoice_number = f"{inv_format_prefix}/{future_next_counter}"
     return jsonify({
         "message": "Invoice created successfully", 
         "invoice": new_invoice,

@@ -643,10 +643,8 @@ function applyStoreSettingsToUI(s) {
     if (fEmail) fEmail.textContent = s.email || "rcmobiles.madakasira@gmail.com";
 
     const invInput = document.getElementById("input-invoice-no");
-    if (invInput && s.invoice_prefix && s.invoice_counter) {
-        const prefix = s.invoice_prefix || "RCM";
-        const yyyymm = new Date().toISOString().slice(0, 7).replace('-', '');
-        currentInvoiceNo = `${prefix}-${yyyymm}-${s.invoice_counter}`;
+    if (invInput && s.invoice_counter) {
+        currentInvoiceNo = `SI/RCM/2627/${s.invoice_counter}`;
         invInput.value = currentInvoiceNo;
     }
 
