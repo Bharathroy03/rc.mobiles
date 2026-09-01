@@ -625,8 +625,8 @@
     </div>
   </div>
 
-  <!-- Items / Models Table with Clean Borders & Rounded Corners -->
-  <div class="rounded-xl border border-slate-300 overflow-hidden mb-4 shadow-sm">
+  <!-- Unified Items & Payment Summary Single Table -->
+  <div class="rounded-xl border border-slate-300 overflow-hidden mb-3 shadow-sm">
     <table class="w-full border-collapse text-[11px]">
       <thead>
         <tr class="bg-slate-100 text-slate-900 font-extrabold border-b border-slate-300">
@@ -640,63 +640,65 @@
       <tbody id="previewItemsTbody">
         <!-- Dynamic Rows -->
       </tbody>
+      <tfoot class="border-t-2 border-slate-300 text-slate-800">
+        <tr class="border-b border-slate-200 bg-slate-50/50">
+          <td colspan="4" class="py-1.5 px-3 text-right font-medium text-slate-600 border-r border-slate-200">Subtotal (Gross):</td>
+          <td id="preview-subtotal-val" class="py-1.5 px-3 text-right font-semibold text-slate-900">₹0.00</td>
+        </tr>
+        <tr class="border-b border-slate-200 bg-slate-50/50">
+          <td colspan="4" class="py-1.5 px-3 text-right font-medium text-slate-600 border-r border-slate-200">Taxable Amount:</td>
+          <td id="preview-taxable-val" class="py-1.5 px-3 text-right font-semibold text-slate-900">₹0.00</td>
+        </tr>
+        <tr class="border-b border-slate-200 bg-slate-50/50">
+          <td colspan="4" class="py-1.5 px-3 text-right font-medium text-slate-600 border-r border-slate-200">CGST (9%):</td>
+          <td id="preview-cgst-val" class="py-1.5 px-3 text-right font-semibold text-slate-900">₹0.00</td>
+        </tr>
+        <tr class="border-b border-slate-200 bg-slate-50/50">
+          <td colspan="4" class="py-1.5 px-3 text-right font-medium text-slate-600 border-r border-slate-200">SGST (9%):</td>
+          <td id="preview-sgst-val" class="py-1.5 px-3 text-right font-semibold text-slate-900">₹0.00</td>
+        </tr>
+        <tr class="border-b border-slate-200 bg-slate-50/50" id="previewDiscountRow">
+          <td colspan="4" class="py-1.5 px-3 text-right font-medium text-slate-600 border-r border-slate-200">Discount:</td>
+          <td id="preview-discount-val" class="py-1.5 px-3 text-right font-semibold text-slate-900">₹0.00</td>
+        </tr>
+        <tr class="bg-slate-100 text-slate-900 font-extrabold text-xs">
+          <td colspan="4" class="py-2.5 px-3 text-right uppercase tracking-wider text-primary-container border-r border-slate-200">GRAND TOTAL:</td>
+          <td id="preview-grandtotal-val" class="py-2.5 px-3 text-right text-sm font-black text-primary-container">₹0.00</td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 
-  <!-- Summary Section: Finance Details Left (if active) + Payment Summary Right -->
-  <div class="grid grid-cols-12 gap-4 mb-3">
-    <!-- Left Column: Vertical Finance Details (Hidden if Non-Finance) -->
-    <div class="col-span-6 text-[10px] text-gray-600">
-      <div id="previewA4VerticalFinance" class="hidden bg-blue-50/50 rounded-lg p-3 space-y-1 text-gray-900 text-[10.5px] border border-blue-100 h-full">
-        <div class="font-bold text-xs text-blue-950 border-b border-blue-200 pb-1 mb-1 flex items-center justify-between">
-          <span class="uppercase tracking-wider text-[10px]">Finance Loan Details:</span>
-          <span id="a4-fin-company" class="font-extrabold text-blue-900">Bajaj Finserv</span>
-        </div>
-        <div class="space-y-0.5">
-          <p><strong class="font-bold text-gray-900">Approval / Loan Acc No:</strong> <span id="a4-fin-appno">N/A</span></p>
-          <p><strong class="font-bold text-gray-900">Downpayment Paid:</strong> <span id="a4-fin-dp">₹0.00 (Cash)</span></p>
-          <p><strong class="font-bold text-gray-900">Finance Scheme:</strong> <span id="a4-fin-scheme">N/A</span></p>
-          <p><strong class="font-bold text-gray-900">Financed Loan Amount:</strong> <span id="a4-fin-loan" class="font-extrabold text-blue-900">₹0.00</span></p>
-        </div>
-      </div>
+  <!-- Full-Width Finance Loan Details (Shown Only if Finance Mode Selected) -->
+  <div id="previewA4VerticalFinance" class="hidden bg-blue-50/70 rounded-xl p-3 mb-2.5 border border-blue-200 w-full shadow-sm">
+    <div class="font-bold text-xs text-blue-950 border-b border-blue-200 pb-1.5 mb-2 flex items-center justify-between">
+      <span class="uppercase tracking-wider text-[10.5px] flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-sm text-blue-800">credit_score</span> Finance Loan Details:
+      </span>
+      <span id="a4-fin-company" class="font-black text-blue-900 text-xs px-2.5 py-0.5 bg-blue-100/90 rounded border border-blue-200">Bajaj Finserv</span>
     </div>
-
-    <!-- Right Column: Payment Summary Box -->
-    <div class="col-span-6 ml-auto w-full bg-slate-50/70 rounded-lg p-3 text-xs text-gray-800 border border-slate-100">
-      <h4 class="font-bold text-gray-900 text-xs mb-2 uppercase tracking-wider border-b border-slate-200 pb-1">Payment Summary:</h4>
-      <div class="space-y-1.5 pb-2">
-        <div class="flex justify-between">
-          <span class="text-gray-600">Subtotal (Gross):</span>
-          <span id="preview-subtotal-val" class="font-semibold text-gray-900">₹0.00</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-600">Taxable Amount:</span>
-          <span id="preview-taxable-val" class="font-semibold text-gray-900">₹0.00</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-600">CGST (9%):</span>
-          <span id="preview-cgst-val" class="font-semibold text-gray-900">₹0.00</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-600">SGST (9%):</span>
-          <span id="preview-sgst-val" class="font-semibold text-gray-900">₹0.00</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-600">Discount:</span>
-          <span id="preview-discount-val" class="font-semibold text-gray-900">₹0.00</span>
-        </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10.5px]">
+      <div>
+        <span class="text-gray-500 block text-[9.5px] uppercase font-bold">Approval / Loan Acc No</span>
+        <strong id="a4-fin-appno" class="text-gray-900 font-bold">N/A</strong>
       </div>
-
-      <!-- Grand Total Bar -->
-      <div class="border-t border-b border-slate-300 py-2 mt-1 flex justify-between items-center font-extrabold text-sm text-gray-900 bg-slate-200/60 px-2 rounded">
-        <span>GRAND TOTAL:</span>
-        <span id="preview-grandtotal-val" class="text-base text-primary-container">₹0.00</span>
+      <div>
+        <span class="text-gray-500 block text-[9.5px] uppercase font-bold">Downpayment Paid</span>
+        <strong id="a4-fin-dp" class="text-gray-900 font-bold">₹0.00 (Cash)</strong>
+      </div>
+      <div>
+        <span class="text-gray-500 block text-[9.5px] uppercase font-bold">Finance Scheme</span>
+        <strong id="a4-fin-scheme" class="text-gray-900 font-bold">N/A</strong>
+      </div>
+      <div>
+        <span class="text-gray-500 block text-[9.5px] uppercase font-bold">Financed Loan Amount</span>
+        <strong id="a4-fin-loan" class="text-blue-900 font-extrabold text-xs">₹0.00</strong>
       </div>
     </div>
   </div>
 
   <!-- Amount in Words Box (Full Width) -->
-  <div class="bg-slate-50/60 rounded-lg p-2.5 text-[11px] mb-3 flex justify-between items-center border border-slate-100">
+  <div class="bg-slate-50/80 rounded-lg p-2.5 text-[11px] mb-2.5 flex justify-between items-center border border-slate-200 shadow-sm">
     <div>
       <span class="text-gray-600 font-semibold">Amount in Words: </span>
       <strong id="preview-amount-words" class="text-gray-900 font-extrabold">Rupees Zero Only</strong>
@@ -704,8 +706,20 @@
     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">E.&amp;O.E.</span>
   </div>
 
-  <!-- Full-Width Terms & Conditions Box (Positioned Below Amount in Words) -->
-  <div class="bg-slate-50/50 rounded-lg p-3 border border-slate-100 mb-3 w-full">
+  <!-- Payment Received Details Box (Full Width) -->
+  <div class="bg-slate-50/60 rounded-lg p-2.5 text-[10.5px] mb-2.5 flex justify-between items-center border border-slate-200" id="previewPaymentReceivedBox">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+      <span class="text-gray-600 font-semibold">Payment Details: </span>
+      <strong id="preview-payment-mode-display" class="text-gray-900 font-bold">Cash</strong>
+    </div>
+    <div>
+      <span id="preview-payment-status-badge" class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wide">Paid</span>
+    </div>
+  </div>
+
+  <!-- Full-Width Terms & Conditions Box (Positioned Below Payment Received Details) -->
+  <div class="bg-slate-50/50 rounded-lg p-3 border border-slate-200 mb-3 w-full">
     <h4 class="font-bold text-gray-900 text-xs mb-1 uppercase tracking-wider border-b border-slate-200 pb-1">Terms &amp; Conditions:</h4>
     <ol class="list-decimal pl-3.5 space-y-0.5 text-gray-600 text-[10px]" id="preview-terms-list">
       <li>Goods once sold will not be taken back or exchanged without valid invoice.</li>

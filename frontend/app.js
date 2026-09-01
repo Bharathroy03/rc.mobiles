@@ -967,6 +967,9 @@ function updateInvoicePreview() {
     safeSetText("preview-amount-words", numberToWordsIndian(netTotal) + " Only");
     safeSetText("preview-words", numberToWordsIndian(netTotal) + " Only");
 
+    const discRow = document.getElementById("previewDiscountRow");
+    if (discRow) discRow.style.display = discount > 0 ? "" : "none";
+
     // REAL-TIME SETTLEMENT & DYNAMIC A4 VERTICAL FINANCE BLOCK
     const previewPm = document.getElementById("preview-payment-mode");
     const financeBox = document.getElementById("previewFinanceBox") || document.getElementById("preview-finance-details");
@@ -985,6 +988,7 @@ function updateInvoicePreview() {
         safeSetText("pay-fin-loan-val", `₹${loanVal.toLocaleString('en-IN', {minimumFractionDigits: 2})}`);
 
         safeSetText(previewPm, `Finance (${financer})`);
+        safeSetText("preview-payment-mode-display", `Finance: ${financer} | Downpayment: ₹${dpVal.toFixed(2)} (${dpMode}) | Financed Loan: ₹${loanVal.toFixed(2)}`);
         if (financeBox) financeBox.classList.remove("hidden");
         if (a4FinBlock) a4FinBlock.classList.remove("hidden");
 
@@ -1010,6 +1014,14 @@ function updateInvoicePreview() {
         const upiAmt = parseFloat(document.getElementById("pay-upi-amount")?.value) || 0.0;
         const totalReceived = cashAmt + cardAmt + upiAmt;
         const balance = netTotal - totalReceived;
+
+        const modes = [];
+        if (cashAmt > 0) modes.push(`Cash: ₹${cashAmt.toFixed(2)}`);
+        if (cardAmt > 0) modes.push(`Card: ₹${cardAmt.toFixed(2)}`);
+        if (upiAmt > 0) modes.push(`UPI / E-Wallet: ₹${upiAmt.toFixed(2)}`);
+        const modeSummary = modes.length > 0 ? modes.join(" | ") : "Direct (Cash)";
+        safeSetText("preview-payment-mode-display", modeSummary);
+        safeSetText(previewPm, modeSummary);
 
         safeSetText("pay-calc-grand-total", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
         safeSetText("pay-received-total", `₹${totalReceived.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
@@ -1046,21 +1058,6 @@ function updateInvoicePreview() {
                 statusBadge.innerText = `💵 OVERPAID! Return Change to Customer: ₹${excess.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
                 statusBadge.className = "text-xs font-extrabold p-2 rounded-lg text-center mt-1 bg-blue-100 text-blue-900 border border-blue-300";
                 statusBadge.classList.remove("hidden");
-            }
-        }
-
-        const modes = [];
-        if (cashAmt > 0) modes.push(`Cash: ₹${cashAmt.toFixed(2)}`);
-        if (cardAmt > 0) modes.push(`Card: ₹${cardAmt.toFixed(2)}`);
-        if (upiAmt > 0) modes.push(`UPI: ₹${upiAmt.toFixed(2)}`);
-
-        if (previewPm) {
-            if (modes.length === 0) {
-                previewPm.innerText = "Cash";
-            } else if (modes.length === 1 && cashAmt > 0 && Math.abs(cashAmt - netTotal) < 0.01) {
-                previewPm.innerText = "Cash";
-            } else {
-                previewPm.innerText = modes.join(" | ");
             }
         }
     }
