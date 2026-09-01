@@ -433,24 +433,17 @@
   </div>
 </div>
 
-<!-- 5. PAYMENT MODES & SETTLEMENT SECTION -->
+<!-- 5. PAYMENT MODES SECTION -->
 <div id="sectionTabPayment" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 sm:p-5 space-y-4">
   <div class="border-b pb-2 flex justify-between items-center">
     <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
-      <span class="material-symbols-outlined text-base text-primary-container">payments</span> 5. Payment Modes &amp; Settlement
+      <span class="material-symbols-outlined text-base text-primary-container">payments</span> 5. Payment Details
     </h3>
     <span class="text-[10px] text-gray-500 font-semibold uppercase" id="currentModeLabel">Direct Payment</span>
   </div>
 
   <!-- OPTION A: NON-FINANCE DIRECT PAYMENT (CASH / CARD / UPI) -->
-  <div id="paySubDirect" class="space-y-4">
-    <div class="flex justify-between items-center text-xs font-bold text-gray-700 border-b pb-1">
-      <span>Payment Received Breakdown</span>
-      <button type="button" onclick="autoFillFullCash()" class="text-primary-container hover:underline text-[11px] font-extrabold uppercase tracking-wider">
-        ⚡ Auto-fill Full Cash
-      </button>
-    </div>
-
+  <div id="paySubDirect" class="space-y-3">
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
       <div>
         <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Cash (₹)</label>
@@ -465,29 +458,16 @@
         <input id="pay-upi-amount" type="number" step="0.01" class="w-full border-gray-300 rounded-lg p-2.5 text-sm text-right font-bold focus:ring-2 focus:ring-primary-container focus:outline-none" placeholder="0.00" value="">
       </div>
     </div>
-
-    <!-- Real-time Settlement & Balance Box -->
-    <div class="p-3.5 rounded-xl bg-slate-50 border border-gray-200 space-y-2 text-xs">
-      <div class="flex justify-between items-center text-gray-700">
-        <span>Invoice Grand Total:</span>
-        <span id="pay-calc-grand-total" class="font-extrabold text-gray-900 text-sm">₹0.00</span>
-      </div>
-      <div class="flex justify-between items-center text-gray-700">
-        <span>Total Payment Received:</span>
-        <span id="pay-received-total" class="font-bold text-gray-900">₹0.00</span>
-      </div>
-      <div class="flex justify-between items-center border-t border-gray-200 pt-2 font-bold">
-        <span id="pay-balance-label" class="text-gray-700">Balance Due / Pending:</span>
-        <span id="pay-balance-amount" class="text-sm font-extrabold text-red-600">₹0.00</span>
-      </div>
-      <div id="pay-status-badge" class="hidden text-xs font-extrabold p-2 rounded-lg text-center mt-1"></div>
+    <div>
+      <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Discount (₹)</label>
+      <input class="w-full sm:w-48 border-gray-300 rounded-lg p-2.5 text-sm text-right font-bold text-red-600 focus:ring-2 focus:ring-primary-container focus:outline-none" id="input-discount" type="number" step="0.01" value="0.00" placeholder="0.00">
     </div>
   </div>
 
   <!-- OPTION B: FINANCE DETAILS (DIRECTLY SHIFTED WHEN FINANCE SELECTED, ALL FIELDS MANDATORY) -->
-  <div id="paySubFinance" class="hidden space-y-4 p-4 rounded-xl border border-blue-200 bg-blue-50/40">
+  <div id="paySubFinance" class="hidden space-y-3 p-4 rounded-xl border border-blue-200 bg-blue-50/40">
     <div class="text-xs font-bold text-blue-900 border-b border-blue-200 pb-2 flex items-center gap-1.5">
-      <span class="material-symbols-outlined text-base">credit_score</span> Option B: Finance Loan &amp; Downpayment Details
+      <span class="material-symbols-outlined text-base">credit_score</span> Option B: Finance Details
       <span class="ml-auto text-[10px] text-red-500 font-semibold">* All fields mandatory</span>
     </div>
 
@@ -530,53 +510,23 @@
       <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Finance Scheme / EMI Details <span class="text-red-500">*</span></label>
       <input id="pay-finance-scheme" type="text" class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none bg-white font-medium" placeholder="Enter Finance Scheme / EMI Details" oninput="this.classList.remove('field-invalid')">
     </div>
-
-    <!-- Real-time Finance Calculator -->
-    <div class="p-3.5 rounded-xl bg-white border border-blue-200 space-y-2 text-xs">
-      <div class="flex justify-between items-center text-gray-700">
-        <span>Invoice Grand Total:</span>
-        <span id="pay-fin-grand-total" class="font-bold text-gray-900">₹0.00</span>
-      </div>
-      <div class="flex justify-between items-center text-gray-700">
-        <span>Downpayment Paid:</span>
-        <span id="pay-fin-dp-val" class="font-bold text-gray-900">₹0.00</span>
-      </div>
-      <div class="flex justify-between items-center border-t border-blue-200 pt-2 font-extrabold text-blue-900 text-sm">
-        <span>Financed Loan Amount:</span>
-        <span id="pay-fin-loan-val">₹0.00</span>
-      </div>
-    </div>
   </div>
 </div>
 
-<!-- 6. PAYMENT SUMMARY CARD -->
-<div class="bg-white rounded-xl p-4 sm:p-5 border border-gray-200 shadow-sm space-y-3">
-  <h3 class="text-primary-container font-extrabold uppercase tracking-wider text-xs border-b pb-2 flex justify-between items-center">
-    <span>6. Payment Summary</span>
-    <span class="text-[10px] text-gray-500 font-normal uppercase">GST 18% Inclusive</span>
-  </h3>
-  <div class="space-y-2 text-sm">
-    <div class="flex justify-between text-gray-700">
-      <span>Subtotal (Gross):</span>
-      <span class="font-bold text-gray-900" id="summary-subtotal">₹0.00</span>
-    </div>
-    <div class="flex justify-between items-center text-gray-700">
-      <span>Discount (₹):</span>
-      <input class="w-28 p-1 text-right rounded border-gray-300 h-8 text-red-600 font-bold focus:ring-0 focus:border-primary-container" id="input-discount" type="number" step="0.01" value="0.00" placeholder="0.00">
-    </div>
-    <div class="flex justify-between text-gray-500 text-xs">
-      <span>Taxable Amount:</span>
-      <span id="summary-taxable">₹0.00</span>
-    </div>
-    <div class="flex justify-between text-gray-500 text-xs">
-      <span>CGST (9%) + SGST (9%):</span>
-      <span id="summary-gst">₹0.00</span>
-    </div>
-    <div class="flex justify-between border-t-2 border-primary-container pt-2.5 text-base font-extrabold text-gray-900 bg-slate-50 p-2.5 rounded-lg mt-2 shadow-sm">
-      <span class="uppercase tracking-wider text-xs my-auto">Grand Total:</span>
-      <span class="text-lg text-primary-container" id="summary-total">₹0.00</span>
-    </div>
-  </div>
+<!-- Hidden Calculation Elements (Preserves Internal Calculation Sync for A4 Preview & Invoices) -->
+<div class="hidden" aria-hidden="true">
+  <span id="summary-subtotal">₹0.00</span>
+  <span id="summary-taxable">₹0.00</span>
+  <span id="summary-gst">₹0.00</span>
+  <span id="summary-total">₹0.00</span>
+  <span id="pay-calc-grand-total">₹0.00</span>
+  <span id="pay-received-total">₹0.00</span>
+  <span id="pay-balance-label"></span>
+  <span id="pay-balance-amount">₹0.00</span>
+  <span id="pay-status-badge"></span>
+  <span id="pay-fin-grand-total">₹0.00</span>
+  <span id="pay-fin-dp-val">₹0.00</span>
+  <span id="pay-fin-loan-val">₹0.00</span>
 </div>
 
 </div>

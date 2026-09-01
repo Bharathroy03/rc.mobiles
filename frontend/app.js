@@ -688,7 +688,6 @@ function renderLineItemRows() {
             <div class="flex justify-between items-center text-xs font-bold text-gray-700 border-b pb-1">
                 <span>Item / Model #${index + 1}</span>
                 <div class="flex items-center gap-2">
-                    <span class="text-[11px] text-slate-500 font-semibold">Line Total: <strong class="text-slate-900 font-extrabold" id="item-row-total-${item.id}">₹${(((item.qty || 1) * (item.price || 0.0))).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></span>
                     ${itemsList.length > 1 ? `
                         <button type="button" onclick="removeItemRow(${item.id})" class="text-red-600 hover:text-red-800 text-[11px] font-semibold flex items-center gap-0.5 ml-2">
                             <span class="material-symbols-outlined text-sm">delete</span> Remove
