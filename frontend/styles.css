@@ -969,11 +969,16 @@ body.dark-theme {
 @media print {
     @page {
         size: A4 portrait;
-        margin: 0;
+        margin: 4mm 6mm 4mm 6mm;
+    }
+
+    *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     html, body {
-        width: 210mm !important;
+        width: 100% !important;
         height: auto !important;
         min-height: auto !important;
         margin: 0 !important;
@@ -1024,7 +1029,7 @@ body.dark-theme {
     main {
         margin: 0 !important;
         padding: 0 !important;
-        width: 210mm !important;
+        width: 100% !important;
         height: auto !important;
         background: #ffffff !important;
         overflow: visible !important;
@@ -1035,8 +1040,8 @@ body.dark-theme {
     #invoicePreviewSection {
         display: block !important;
         visibility: visible !important;
-        width: 210mm !important;
-        max-width: 210mm !important;
+        width: 100% !important;
+        max-width: 100% !important;
         height: auto !important;
         background: #ffffff !important;
         overflow: visible !important;
@@ -1055,8 +1060,8 @@ body.dark-theme {
         visibility: visible !important;
         padding: 0 !important;
         margin: 0 !important;
-        width: 210mm !important;
-        max-width: 210mm !important;
+        width: 100% !important;
+        max-width: 100% !important;
         height: auto !important;
         overflow: visible !important;
         background: #ffffff !important;
@@ -1068,16 +1073,15 @@ body.dark-theme {
         justify-content: space-between !important;
         visibility: visible !important;
         transform: none !important;
-        width: 210mm !important;
-        max-width: 210mm !important;
+        width: 100% !important;
+        max-width: 100% !important;
         box-sizing: border-box !important;
-        min-height: 284mm !important;
-        height: 284mm !important;
-        max-height: 286mm !important;
+        min-height: 275mm !important;
+        max-height: 284mm !important;
         box-shadow: none !important;
         border: none !important;
-        padding: 7mm 9mm !important;
-        margin: 0 !important;
+        padding: 2mm 3mm !important;
+        margin: 0 auto !important;
         background: #ffffff !important;
         font-family: 'Ubuntu Sans Mono', 'Ubuntu Mono', monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
         page-break-before: avoid !important;
@@ -1106,15 +1110,19 @@ body.dark-theme {
         display: table !important;
     }
 
-    #a4PaperElement table thead {
-        display: table-header-group !important;
-    }
-
-    #a4PaperElement table tbody {
-        display: table-row-group !important;
+    #a4PaperElement table th,
+    #a4PaperElement table td {
+        padding-top: 1.2mm !important;
+        padding-bottom: 1.2mm !important;
     }
 
     #a4PaperElement table tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    #a4PaperElement .mt-auto {
+        margin-top: auto !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }

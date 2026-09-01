@@ -88,24 +88,28 @@
             }
         }
         
-        /* 100% PERFECT SINGLE-PAGE A4 PRINT MEDIA STYLES - ZERO EXTRA PAGES */
+        /* 100% PERFECT SINGLE-PAGE A4 PRINT MEDIA STYLES - ZERO EXTRA PAGES & GUARANTEED FOOTER */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 0;
+                margin: 4mm 6mm 4mm 6mm;
             }
             
+            *, *::before, *::after {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             html, body {
-                width: 210mm !important;
-                height: 100% !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 background: #ffffff !important;
                 color: #000000 !important;
                 overflow: visible !important;
                 display: block !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
             }
             
             /* Absolutely hide all non-invoice UI elements */
@@ -120,7 +124,17 @@
             .modal,
             .app-user-badge-container,
             #appToastContainer,
-            #appDialogModal {
+            #appDialogModal,
+            #invoiceSuccessModal,
+            #settingsModal,
+            #usersModal,
+            #invoicesModal,
+            #dashboardModal,
+            #addProductModal,
+            #licenseModal,
+            .md\:hidden,
+            #mobTabFormBtn,
+            #mobTabPreviewBtn {
                 display: none !important;
                 visibility: hidden !important;
                 height: 0 !important;
@@ -134,15 +148,15 @@
             main {
                 margin: 0 !important;
                 padding: 0 !important;
-                width: 210mm !important;
+                width: 100% !important;
                 background: #ffffff !important;
                 display: block !important;
                 overflow: visible !important;
             }
 
             #invoicePreviewSection {
-                width: 210mm !important;
-                max-width: 210mm !important;
+                width: 100% !important;
+                max-width: 100% !important;
                 display: block !important;
                 visibility: visible !important;
                 background: #ffffff !important;
@@ -159,39 +173,41 @@
             #invoice-preview-container {
                 padding: 0 !important;
                 margin: 0 !important;
-                width: 210mm !important;
-                max-width: 210mm !important;
+                width: 100% !important;
+                max-width: 100% !important;
                 overflow: visible !important;
                 display: block !important;
                 background: #ffffff !important;
             }
             
-            #a4PaperElement {
+            #a4PaperElement, .a4-paper {
                 display: flex !important;
                 flex-direction: column !important;
                 justify-content: space-between !important;
                 position: relative !important;
-                width: 210mm !important;
-                max-width: 210mm !important;
+                width: 100% !important;
+                max-width: 100% !important;
                 box-sizing: border-box !important;
-                min-height: 284mm !important;
-                height: 284mm !important;
-                max-height: 286mm !important;
-                padding: 7mm 9mm !important;
-                margin: 0 !important;
+                min-height: 275mm !important;
+                max-height: 284mm !important;
+                padding: 2mm 3mm !important;
+                margin: 0 auto !important;
                 box-shadow: none !important;
                 border: none !important;
                 transform: none !important;
                 background: #ffffff !important;
                 color: #000000 !important;
+                font-family: 'Ubuntu Sans Mono', 'Ubuntu Mono', monospace !important;
                 page-break-before: avoid !important;
                 page-break-after: avoid !important;
                 page-break-inside: avoid !important;
                 break-before: avoid !important;
                 break-after: avoid !important;
                 break-inside: avoid !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
+            }
+
+            #a4PaperElement *, .a4-paper * {
+                font-family: inherit;
             }
 
             #a4PaperElement > div.relative.z-10 {
@@ -208,15 +224,19 @@
                 display: table !important;
             }
 
-            #a4PaperElement table thead {
-                display: table-header-group !important;
-            }
-
-            #a4PaperElement table tbody {
-                display: table-row-group !important;
+            #a4PaperElement table th,
+            #a4PaperElement table td {
+                padding-top: 1.2mm !important;
+                padding-bottom: 1.2mm !important;
             }
 
             #a4PaperElement table tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            #a4PaperElement .mt-auto {
+                margin-top: auto !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
