@@ -516,6 +516,19 @@
       <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Finance Scheme / EMI Details <span class="text-red-500">*</span></label>
       <input id="pay-finance-scheme" type="text" class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none bg-white font-medium" placeholder="Enter Finance Scheme / EMI Details" oninput="this.classList.remove('field-invalid')">
     </div>
+  <!-- In-Form Action Buttons (Directly below Section 5) -->
+  <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+    <button type="button" onclick="resetForm()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+      <span class="material-symbols-outlined text-base">restart_alt</span> Clear / Reset Form
+    </button>
+    <div class="w-full sm:w-auto flex items-center gap-2">
+      <button type="button" onclick="saveInvoice(false)" class="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-xl border border-primary-container text-primary-container hover:bg-blue-50 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+        <span class="material-symbols-outlined text-base">save</span> Save Draft
+      </button>
+      <button type="button" onclick="saveInvoice(true)" class="flex-1 sm:flex-initial px-5 sm:px-6 py-2.5 rounded-xl bg-primary-container hover:bg-slate-900 text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
+        <span class="material-symbols-outlined text-base">receipt_long</span> Generate &amp; Print
+      </button>
+    </div>
   </div>
 </div>
 
@@ -537,12 +550,12 @@
 
 </div>
 
-<!-- DESKTOP Action Bar (Untouched, Desktop Only) -->
+<!-- DESKTOP Bottom Pinned Action Bar -->
 <div id="posFormActionBar" class="hidden md:flex w-full bg-white border-t border-slate-200 px-4 sm:px-6 py-3 shadow-lg z-20 items-center justify-between gap-3 shrink-0">
-  <button type="button" id="btnClearForm" class="text-slate-600 hover:text-slate-900 font-bold text-xs px-3 sm:px-4 py-2 transition-colors shrink-0">Clear / Reset Form</button>
+  <button type="button" id="btnClearForm" onclick="resetForm()" class="text-slate-600 hover:text-slate-900 font-bold text-xs px-3 sm:px-4 py-2 transition-colors shrink-0">Clear / Reset Form</button>
   <div class="flex items-center gap-2 shrink-0">
-    <button type="button" id="btnSaveDraft" class="border border-primary-container text-primary-container hover:bg-blue-50 font-bold rounded-xl text-xs px-3 sm:px-5 py-2.5 transition-colors shrink-0 whitespace-nowrap">Save Draft</button>
-    <button type="button" id="btnGenerateInvoice" class="bg-primary-container text-white hover:bg-slate-900 font-extrabold rounded-xl text-xs px-3.5 sm:px-6 py-2.5 shadow-md transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+    <button type="button" id="btnSaveDraft" onclick="saveInvoice(false)" class="border border-primary-container text-primary-container hover:bg-blue-50 font-bold rounded-xl text-xs px-3 sm:px-5 py-2.5 transition-colors shrink-0 whitespace-nowrap">Save Draft</button>
+    <button type="button" id="btnGenerateInvoice" onclick="saveInvoice(true)" class="bg-primary-container text-white hover:bg-slate-900 font-extrabold rounded-xl text-xs px-3.5 sm:px-6 py-2.5 shadow-md transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap">
       <span class="material-symbols-outlined text-base">receipt_long</span> <span>Generate &amp; Print</span>
     </button>
   </div>

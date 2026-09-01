@@ -1369,6 +1369,9 @@ function resetForm() {
     showToast("Invoice form reset to blank draft.", "info");
 }
 
+window.saveInvoice = saveInvoice;
+window.resetForm = resetForm;
+
 // ---------------- MODAL MANAGEMENT ----------------
 function openModal(id, filter = "") {
     const modal = document.getElementById(id);
