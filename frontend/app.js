@@ -951,6 +951,7 @@ function updateInvoicePreview() {
     safeSetText("summary-taxable", `₹${taxableTotal.toFixed(2)}`);
     safeSetText("summary-gst", `₹${cgst.toFixed(2)} + ₹${sgst.toFixed(2)}`);
     safeSetText("summary-total", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
+    safeSetText("paymentSectionGrandTotal", `₹${netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
 
     // Update Right A4 Summary Sheet (Supports both ID variations)
     safeSetText("preview-subtotal-val", `₹${subtotal.toFixed(2)}`);
