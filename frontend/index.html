@@ -10,7 +10,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="auth.js?v=2.5"></script>
 <script src="license.js?v=2.5"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Outfit:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <script id="tailwind-config">
         tailwind.config = {
@@ -32,7 +32,8 @@
                     },
                     "fontFamily": {
                         "sans": ["'Plus Jakarta Sans'", "Inter", "sans-serif"],
-                        "heading": ["'Outfit'", "'Plus Jakarta Sans'", "sans-serif"]
+                        "heading": ["'Outfit'", "'Plus Jakarta Sans'", "sans-serif"],
+                        "mono": ["'Ubuntu Sans Mono'", "'Ubuntu Mono'", "monospace"]
                     }
                 }
             }
@@ -56,8 +57,9 @@
             border-radius: 10px;
         }
         
-        /* On-Screen A4 Paper Container */
-        .a4-paper {
+        /* On-Screen & Print A4 Paper Container - Ubuntu Sans Mono Monospace */
+        .a4-paper,
+        #a4PaperElement {
             width: 210mm;
             min-height: 297mm;
             padding: 12mm 15mm;
@@ -65,10 +67,13 @@
             background: #ffffff;
             color: #1e293b;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-            letter-spacing: -0.01em;
+            font-family: 'Ubuntu Sans Mono', 'Ubuntu Mono', monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+            letter-spacing: normal;
             box-sizing: border-box;
+        }
+
+        #a4PaperElement * {
+            font-family: inherit;
         }
 
         /* Desktop Split Screen Guarantee */

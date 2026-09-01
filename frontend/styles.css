@@ -964,32 +964,9 @@ body.dark-theme {
 }
 
 /* ==========================================================================
-   A4 INVOICE TYPOGRAPHY - HELVETICA FONT FAMILY
-   ========================================================================== */
-.a4-paper, 
-#a4PaperElement,
-#a4PaperElement *:not(.material-symbols-outlined) {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-}
-
-#a4PaperElement .material-symbols-outlined {
-    font-family: 'Material Symbols Outlined' !important;
-}
-
-/* ==========================================================================
    BULLETPROOF SINGLE-PAGE A4 & THERMAL PRINT MEDIA STYLES
    ========================================================================== */
 @media print {
-    #a4PaperElement,
-    .a4-paper,
-    #a4PaperElement *:not(.material-symbols-outlined) {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    }
-
-    #a4PaperElement .material-symbols-outlined {
-        font-family: 'Material Symbols Outlined' !important;
-    }
-
     @page {
         size: A4 portrait;
         margin: 0;
@@ -1102,12 +1079,17 @@ body.dark-theme {
         padding: 7mm 9mm !important;
         margin: 0 !important;
         background: #ffffff !important;
+        font-family: 'Ubuntu Sans Mono', 'Ubuntu Mono', monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
         page-break-before: avoid !important;
         page-break-after: avoid !important;
         page-break-inside: avoid !important;
         break-before: avoid !important;
         break-after: avoid !important;
         break-inside: avoid !important;
+    }
+
+    #a4PaperElement *, .a4-paper * {
+        font-family: inherit;
     }
 
     #a4PaperElement > div.relative.z-10 {
