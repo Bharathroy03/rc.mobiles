@@ -17,6 +17,9 @@ class StoreSettings(db.Model):
     invoice_prefix = db.Column(db.String(10), default="RCM")
     invoice_counter = db.Column(db.Integer, default=1001)
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -44,6 +47,9 @@ class Product(db.Model):
     stock_qty = db.Column(db.Integer, default=1)
     tax_rate = db.Column(db.Float, default=18.0) # Standard 18% GST for mobiles/accessories
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def to_dict(self):
         return {
@@ -87,6 +93,9 @@ class Invoice(db.Model):
 
     items = db.relationship('InvoiceItem', backref='invoice', cascade='all, delete-orphan', lazy=True)
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -129,6 +138,9 @@ class InvoiceItem(db.Model):
     sgst_amount = db.Column(db.Float, default=0.0)
     igst_amount = db.Column(db.Float, default=0.0)
     total_amount = db.Column(db.Float, nullable=False)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def to_dict(self):
         return {
