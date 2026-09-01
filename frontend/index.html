@@ -438,12 +438,6 @@
     <span class="text-[10px] text-gray-500 font-semibold uppercase" id="currentModeLabel">Direct Payment</span>
   </div>
 
-  <!-- Total Invoice Value (Clean Single Value Display) -->
-  <div class="flex items-center justify-between bg-slate-900 text-white px-4 py-3 rounded-xl shadow-sm">
-    <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Total Invoice Value:</span>
-    <span id="paymentSectionGrandTotal" class="text-lg sm:text-xl font-extrabold text-emerald-400">₹0.00</span>
-  </div>
-
   <!-- OPTION A: NON-FINANCE DIRECT PAYMENT (CASH / CARD / UPI) -->
   <div id="paySubDirect" class="space-y-3">
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -512,6 +506,12 @@
       <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Finance Scheme / EMI Details <span class="text-red-500">*</span></label>
       <input id="pay-finance-scheme" type="text" class="w-full border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-primary-container focus:outline-none bg-white font-medium" placeholder="Enter Finance Scheme / EMI Details" oninput="this.classList.remove('field-invalid')">
     </div>
+  </div>
+
+  <!-- Total Invoice Value (Positioned at the Bottom of Section 5) -->
+  <div class="flex items-center justify-between bg-slate-900 text-white px-4 py-3 rounded-xl shadow-sm mt-3">
+    <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Total Invoice Value:</span>
+    <span id="paymentSectionGrandTotal" class="text-lg sm:text-xl font-extrabold text-emerald-400">₹0.00</span>
   </div>
 </div>
 
