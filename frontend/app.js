@@ -610,6 +610,7 @@ async function loadStoreSettings() {
         if (res.ok) {
             storeSettings = await res.json();
             applyStoreSettingsToUI(storeSettings);
+            updateInvoicePreview();
         }
     } catch (err) {
         console.error("Error loading store settings:", err);
@@ -643,9 +644,11 @@ function applyStoreSettingsToUI(s) {
     if (fEmail) fEmail.textContent = s.email || "rcmobiles.madakasira@gmail.com";
 
     const invInput = document.getElementById("input-invoice-no");
-    if (invInput && s.invoice_counter) {
+    if (s && s.invoice_counter) {
         currentInvoiceNo = `SI/RCM/2627/${s.invoice_counter}`;
-        invInput.value = currentInvoiceNo;
+        if (invInput) invInput.value = currentInvoiceNo;
+        safeSetText("preview-invoice-no", currentInvoiceNo);
+        safeSetText("preview-inv-no", currentInvoiceNo);
     }
 
     const setStoreName = document.getElementById("setStoreName");
@@ -877,7 +880,8 @@ function updateInvoicePreview() {
     const custName = (document.getElementById("input-customer-name")?.value || "").trim();
     const custMobile = (document.getElementById("input-customer-mobile")?.value || "").trim();
     const custAddress = (document.getElementById("input-customer-address")?.value || "").trim();
-    const invNo = (document.getElementById("input-invoice-no")?.value || "").trim() || currentInvoiceNo || "";
+    const inputInvNo = (document.getElementById("input-invoice-no")?.value || "").trim();
+    const invNo = inputInvNo || currentInvoiceNo || (storeSettings?.invoice_counter ? `SI/RCM/2627/${storeSettings.invoice_counter}` : "SI/RCM/2627/1001");
     const invDate = getFormatted12HourDateTime();
     const discount = parseFloat(document.getElementById("input-discount")?.value) || 0.0;
 
@@ -1257,7 +1261,13 @@ async function saveInvoice(shouldPrint = true) {
             document.getElementById("invoiceStatusBadge").textContent = "Saved";
             document.getElementById("invoiceStatusBadge").className = "bg-green-100 text-green-800 px-3 py-1 rounded text-xs font-bold uppercase tracking-widest";
             
-            const savedNo = createdInv.invoice_number || currentInvoiceNo;
+            const savedNo = createdInv.invoice_number || currentInvoiceNo || (storeSettings?.invoice_counter ? `SI/RCM/2627/${storeSettings.invoice_counter}` : "SI/RCM/2627/1001");
+            currentInvoiceNo = savedNo;
+            const invInput = document.getElementById("input-invoice-no");
+            if (invInput) invInput.value = savedNo;
+            safeSetText("preview-invoice-no", savedNo);
+            safeSetText("preview-inv-no", savedNo);
+
             const grandTotalVal = createdInv.grand_total || 0;
             const successMsg = editingInvoiceId ? `Invoice ${savedNo} updated successfully!` : `Invoice ${savedNo} generated successfully!`;
             showToast(successMsg, "success");
@@ -1279,6 +1289,7 @@ async function saveInvoice(shouldPrint = true) {
             if (custCard) custCard.style.boxShadow = "";
 
             if (shouldPrint) {
+                updateInvoicePreview();
                 triggerPrintInvoice();
             }
 
