@@ -876,18 +876,18 @@ function safeSetText(idOrEl, text) {
 
 // ---------------- LIVE PREVIEW & REAL-TIME BALANCE CALCULATIONS ----------------
 function updateInvoicePreview() {
-    const custName = (document.getElementById("input-customer-name")?.value || "").trim() || "[Customer Name]";
-    const custMobile = (document.getElementById("input-customer-mobile")?.value || "").trim() || "[Mobile Number]";
-    const custAddress = (document.getElementById("input-customer-address")?.value || "").trim() || "[Address]";
-    const invNo = (document.getElementById("input-invoice-no")?.value || "").trim() || currentInvoiceNo || "[Auto-generated]";
+    const custName = (document.getElementById("input-customer-name")?.value || "").trim();
+    const custMobile = (document.getElementById("input-customer-mobile")?.value || "").trim();
+    const custAddress = (document.getElementById("input-customer-address")?.value || "").trim();
+    const invNo = (document.getElementById("input-invoice-no")?.value || "").trim() || currentInvoiceNo || "";
     const invDate = getFormatted12HourDateTime();
     const discount = parseFloat(document.getElementById("input-discount")?.value) || 0.0;
 
-    // Customer & Billed To Details (Supports both naming conventions)
+    // Customer & Billed To Details
     safeSetText("preview-customer-name", custName);
     safeSetText("preview-cust-name", custName);
-    safeSetText("preview-customer-mobile", custMobile);
-    safeSetText("preview-cust-phone", `+91 ${custMobile.replace(/^(\+91|0)/, '')}`);
+    safeSetText("preview-customer-mobile", custMobile ? custMobile : "");
+    safeSetText("preview-cust-phone", custMobile ? `+91 ${custMobile.replace(/^(\+91|0)/, '')}` : "");
     safeSetText("preview-customer-address", custAddress);
     safeSetText("preview-cust-address", custAddress);
     safeSetText("preview-customer-gstin", "N/A");
@@ -908,22 +908,19 @@ function updateInvoicePreview() {
         subtotal += (q * (item.price || 0.0));
     });
 
-    // Render A4 Table (Clean Borders & Rounded Corners)
+    // Render A4 Table (Clean Zero-Placeholder Rows)
     const tbody = document.getElementById("previewItemsBody") || document.getElementById("previewItemsTbody");
     const hasAnyItemContent = itemsList.some(it => (it.desc && it.desc.trim().length > 0) || (it.price > 0) || (it.imei && it.imei.trim().length > 0));
 
     if (tbody) {
         if (!hasAnyItemContent) {
             tbody.innerHTML = `
-                <tr class="border-b border-gray-200 hover:bg-slate-50/50">
-                    <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-gray-200">1</td>
-                    <td class="py-2.5 px-2.5 text-left border-r border-gray-200">
-                        <div class="font-bold text-gray-900">[Item / Model Name]</div>
-                        <div class="text-[10px] text-blue-600 font-semibold">IMEI/SN: [IMEI/S.NO]</div>
-                    </td>
-                    <td class="py-2.5 px-2.5 text-center text-gray-500 border-r border-gray-200">1</td>
-                    <td class="py-2.5 px-2.5 text-right text-gray-500 border-r border-gray-200">₹0.00</td>
-                    <td class="py-2.5 px-2.5 text-right font-bold text-gray-900">₹0.00</td>
+                <tr class="border-b border-slate-200">
+                    <td class="py-3 px-2.5 text-center text-slate-400 border-r border-slate-200">1</td>
+                    <td class="py-3 px-2.5 text-left border-r border-slate-200"></td>
+                    <td class="py-3 px-2.5 text-center border-r border-slate-200"></td>
+                    <td class="py-3 px-2.5 text-right border-r border-slate-200"></td>
+                    <td class="py-3 px-2.5 text-right"></td>
                 </tr>
             `;
         } else {
@@ -931,16 +928,17 @@ function updateInvoicePreview() {
                 const itemPrice = item.price || 0.0;
                 const q = item.qty || 1;
                 const lineTotal = q * itemPrice;
+                const hasRowContent = (item.desc && item.desc.trim().length > 0) || item.price > 0 || (item.imei && item.imei.trim().length > 0);
                 return `
-                    <tr class="border-b border-gray-200 hover:bg-slate-50/50">
-                        <td class="py-2.5 px-2.5 text-center text-gray-700 border-r border-gray-200">${index + 1}</td>
-                        <td class="py-2.5 px-2.5 text-left border-r border-gray-200">
-                            <div class="font-bold text-gray-900 break-words">${escapeHtml(item.desc || "[Item / Model Name]")}</div>
-                            ${item.imei ? `<div class="text-[10px] text-blue-600 font-semibold break-words">IMEI/SN: ${escapeHtml(item.imei)}</div>` : ''}
+                    <tr class="border-b border-slate-200 hover:bg-slate-50/50">
+                        <td class="py-2.5 px-2.5 text-center text-slate-700 border-r border-slate-200">${index + 1}</td>
+                        <td class="py-2.5 px-2.5 text-left border-r border-slate-200">
+                            <div class="font-bold text-slate-900 break-words">${escapeHtml(item.desc || "")}</div>
+                            ${item.imei && item.imei.trim().length > 0 ? `<div class="text-[10px] text-blue-700 font-bold break-words">IMEI/SN: ${escapeHtml(item.imei.trim())}</div>` : ''}
                         </td>
-                        <td class="py-2.5 px-2.5 text-center font-bold text-gray-900 border-r border-gray-200">${q}</td>
-                        <td class="py-2.5 px-2.5 text-right text-gray-800 border-r border-gray-200">₹${itemPrice.toFixed(2)}</td>
-                        <td class="py-2.5 px-2.5 text-right font-bold text-gray-900">₹${lineTotal.toFixed(2)}</td>
+                        <td class="py-2.5 px-2.5 text-center font-bold text-slate-900 border-r border-slate-200">${hasRowContent ? q : ''}</td>
+                        <td class="py-2.5 px-2.5 text-right text-slate-800 border-r border-slate-200">${hasRowContent ? '₹' + itemPrice.toFixed(2) : ''}</td>
+                        <td class="py-2.5 px-2.5 text-right font-bold text-slate-900">${hasRowContent ? '₹' + lineTotal.toFixed(2) : ''}</td>
                     </tr>
                 `;
             }).join("");
